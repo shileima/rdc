@@ -1,0 +1,23 @@
+{
+  "name": "rdc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+  },
+  "keywords": [
+    "cli",
+    "react",
+    "vite",
+    "webpack",
+    "template",
+    "generator",
+    "rdc"
+  ],
+  "author": "mashilei@meituan.com",
+  "license": "ISC",
+  "packageManager": "pnpm@10.7.1"
+}

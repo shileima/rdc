@@ -1,0 +1,40 @@
+{
+  "name": "@xbot/now",
+  "version": "1.0.1",
+  "description": "A CLI tool for quickly creating React projects and RDC components",
+  "main": "dist/index.js",
+  "bin": {
+    "now": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "prepare": "pnpm run build"
+  },
+  "keywords": [
+    "cli",
+    "react",
+    "vite",
+    "webpack",
+    "template",
+    "generator",
+    "rdc"
+  ],
+  "author": "mashilei@meituan.com",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "inquirer": "^8.2.6"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3"
+  }
+}
