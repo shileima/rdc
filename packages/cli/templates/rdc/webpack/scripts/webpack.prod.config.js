@@ -4,15 +4,10 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const webpack = require('webpack');
-const { fileURLToPath } = require('url');
-const { dirname } = require('path');
 const fs = require('fs');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 // 读取package.json
-const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../package.json'), 'utf-8'));
 const { name: projectName, version } = packageJson;
 
 const { ModuleFederationPlugin } = webpack.container;
