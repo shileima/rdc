@@ -127,6 +127,94 @@ importers:
       babel-loader:
         specifier: ^9.1.3
         version: 9.2.1(@babel/core@7.28.4)(webpack@5.102.1)
+      concurrently:
+        specifier: ^9.2.1
+        version: 9.2.1
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
+      css-loader:
+        specifier: ^6.10.0
+        version: 6.11.0(webpack@5.102.1)
+      css-minimizer-webpack-plugin:
+        specifier: ^7.0.2
+        version: 7.0.2(webpack@5.102.1)
+      html-webpack-plugin:
+        specifier: ^5.6.0
+        version: 5.6.4(webpack@5.102.1)
+      mini-css-extract-plugin:
+        specifier: ^2.9.2
+        version: 2.9.4(webpack@5.102.1)
+      postcss:
+        specifier: ^8.4.47
+        version: 8.5.6
+      postcss-loader:
+        specifier: ^8.1.0
+        version: 8.2.0(postcss@8.5.6)(typescript@5.7.2)(webpack@5.102.1)
+      style-loader:
+        specifier: ^3.3.4
+        version: 3.3.4(webpack@5.102.1)
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.18
+      typescript:
+        specifier: 5.7.2
+        version: 5.7.2
+      webpack:
+        specifier: ^5.90.3
+        version: 5.102.1(webpack-cli@5.1.4)
+      webpack-cli:
+        specifier: ^5.1.4
+        version: 5.1.4(webpack-dev-server@5.2.2)(webpack@5.102.1)
+      webpack-dev-server:
+        specifier: ^5.0.2
+        version: 5.2.2(webpack-cli@5.1.4)(webpack@5.102.1)
+      webpack-merge:
+        specifier: ^6.0.1
+        version: 6.0.1
+
+  rdcs/rdc_test_editor:
+    dependencies:
+      '@ant-design/icons':
+        specifier: ^5.5.2
+        version: 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.23.9
+        version: 7.28.4
+      '@babel/preset-env':
+        specifier: ^7.23.9
+        version: 7.28.3(@babel/core@7.28.4)
+      '@babel/preset-react':
+        specifier: ^7.23.3
+        version: 7.27.1(@babel/core@7.28.4)
+      '@babel/preset-typescript':
+        specifier: ^7.23.3
+        version: 7.27.1(@babel/core@7.28.4)
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.26
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.26)
+      antd:
+        specifier: 5.22.2
+        version: 5.22.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.4.21(postcss@8.5.6)
+      babel-loader:
+        specifier: ^9.1.3
+        version: 9.2.1(@babel/core@7.28.4)(webpack@5.102.1)
+      concurrently:
+        specifier: ^9.2.1
+        version: 9.2.1
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -1928,6 +2016,10 @@ packages:
     resolution: {integrity: sha1-ovSEN6LKqaIkNueUvwceyeYc7fY=, tarball: http://r.npm.sankuai.com/cli-width/download/cli-width-3.0.0.tgz}
     engines: {node: '>= 10'}
 
+  cliui@8.0.1:
+    resolution: {integrity: sha1-DASwddsCy/5g3I5s8vVIaxo2CKo=, tarball: http://r.npm.sankuai.com/cliui/download/cliui-8.0.1.tgz}
+    engines: {node: '>=12'}
+
   clone-deep@4.0.1:
     resolution: {integrity: sha1-wZ/Zvbv4WUK0/ZechNz31fB8I4c=, tarball: http://r.npm.sankuai.com/clone-deep/download/clone-deep-4.0.1.tgz}
     engines: {node: '>=6'}
@@ -1984,6 +2076,11 @@ packages:
 
   concat-map@0.0.1:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=, tarball: http://r.npm.sankuai.com/concat-map/download/concat-map-0.0.1.tgz}
+
+  concurrently@9.2.1:
+    resolution: {integrity: sha1-JI6iG5V1SUe+La2cPktg8Yyk5E8=, tarball: http://r.npm.sankuai.com/concurrently/download/concurrently-9.2.1.tgz}
+    engines: {node: '>=18'}
+    hasBin: true
 
   connect-history-api-fallback@2.0.0:
     resolution: {integrity: sha1-ZHJkhFJRoNryW5fOh4NMrOD18cg=, tarball: http://r.npm.sankuai.com/connect-history-api-fallback/download/connect-history-api-fallback-2.0.0.tgz}
@@ -2499,6 +2596,10 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha1-MqbudsPX9S1GsrGuXZP+qFgKJeA=, tarball: http://r.npm.sankuai.com/gensync/download/gensync-1.0.0-beta.2.tgz}
     engines: {node: '>=6.9.0'}
+
+  get-caller-file@2.0.5:
+    resolution: {integrity: sha1-T5RBKoLbMvNuOwuXQfipf+sDH34=, tarball: http://r.npm.sankuai.com/get-caller-file/download/get-caller-file-2.0.5.tgz}
+    engines: {node: 6.* || 8.* || >= 10.*}
 
   get-intrinsic@1.3.0:
     resolution: {integrity: sha1-dD8OO2lkqTpUke0b/6rgVNf5jQE=, tarball: http://r.npm.sankuai.com/get-intrinsic/download/get-intrinsic-1.3.0.tgz}
@@ -3732,6 +3833,10 @@ packages:
   renderkid@3.0.0:
     resolution: {integrity: sha1-X9gj5NaVHTc1jsyaWLHwaDa2Joo=, tarball: http://r.npm.sankuai.com/renderkid/download/renderkid-3.0.0.tgz}
 
+  require-directory@2.1.1:
+    resolution: {integrity: sha1-jGStX9MNqxyXbiNE/+f3kqam30I=, tarball: http://r.npm.sankuai.com/require-directory/download/require-directory-2.1.1.tgz}
+    engines: {node: '>=0.10.0'}
+
   require-from-string@2.0.2:
     resolution: {integrity: sha1-iaf92TgmEmcxjq/hT5wy5ZjDaQk=, tarball: http://r.npm.sankuai.com/require-from-string/download/require-from-string-2.0.2.tgz}
     engines: {node: '>=0.10.0'}
@@ -4061,6 +4166,10 @@ packages:
     peerDependencies:
       tslib: '2'
 
+  tree-kill@1.2.2:
+    resolution: {integrity: sha1-TKCakJLIi3OnzcXooBtQeweQoMw=, tarball: http://r.npm.sankuai.com/tree-kill/download/tree-kill-1.2.2.tgz}
+    hasBin: true
+
   ts-api-utils@2.1.0:
     resolution: {integrity: sha1-WV9wlORu7TZME/0j51+VE9Kbr5E=, tarball: http://r.npm.sankuai.com/ts-api-utils/download/ts-api-utils-2.1.0.tgz}
     engines: {node: '>=18.12'}
@@ -4304,8 +4413,20 @@ packages:
     resolution: {integrity: sha1-h4PU32cdTVA2W+LuTHGRegVXuqs=, tarball: http://r.npm.sankuai.com/wsl-utils/download/wsl-utils-0.1.0.tgz}
     engines: {node: '>=18'}
 
+  y18n@5.0.8:
+    resolution: {integrity: sha1-f0k00PfKjFb5UxSTndzS3ZHOHVU=, tarball: http://r.npm.sankuai.com/y18n/download/y18n-5.0.8.tgz}
+    engines: {node: '>=10'}
+
   yallist@3.1.1:
     resolution: {integrity: sha1-27fa+b/YusmrRev2ArjLrQ1dCP0=, tarball: http://r.npm.sankuai.com/yallist/download/yallist-3.1.1.tgz}
+
+  yargs-parser@21.1.1:
+    resolution: {integrity: sha1-kJa87r+ZDSG7MfqVFuDt4pSnfTU=, tarball: http://r.npm.sankuai.com/yargs-parser/download/yargs-parser-21.1.1.tgz}
+    engines: {node: '>=12'}
+
+  yargs@17.7.2:
+    resolution: {integrity: sha1-mR3zmspnWhkrgW4eA2P5110qomk=, tarball: http://r.npm.sankuai.com/yargs/download/yargs-17.7.2.tgz}
+    engines: {node: '>=12'}
 
   yocto-queue@0.1.0:
     resolution: {integrity: sha1-ApTrPe4FAo0x7hpfosVWpqrxChs=, tarball: http://r.npm.sankuai.com/yocto-queue/download/yocto-queue-0.1.0.tgz}
@@ -6151,6 +6272,12 @@ snapshots:
 
   cli-width@3.0.0: {}
 
+  cliui@8.0.1:
+    dependencies:
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      wrap-ansi: 7.0.0
+
   clone-deep@4.0.1:
     dependencies:
       is-plain-object: 2.0.4
@@ -6200,6 +6327,15 @@ snapshots:
   compute-scroll-into-view@3.1.1: {}
 
   concat-map@0.0.1: {}
+
+  concurrently@9.2.1:
+    dependencies:
+      chalk: 4.1.2
+      rxjs: 7.8.2
+      shell-quote: 1.8.3
+      supports-color: 8.1.1
+      tree-kill: 1.2.2
+      yargs: 17.7.2
 
   connect-history-api-fallback@2.0.0: {}
 
@@ -6756,6 +6892,8 @@ snapshots:
   function-bind@1.1.2: {}
 
   gensync@1.0.0-beta.2: {}
+
+  get-caller-file@2.0.5: {}
 
   get-intrinsic@1.3.0:
     dependencies:
@@ -8015,6 +8153,8 @@ snapshots:
       lodash: 4.17.21
       strip-ansi: 6.0.1
 
+  require-directory@2.1.1: {}
+
   require-from-string@2.0.2: {}
 
   requires-port@1.0.0: {}
@@ -8408,6 +8548,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  tree-kill@1.2.2: {}
+
   ts-api-utils@2.1.0(typescript@5.8.3):
     dependencies:
       typescript: 5.8.3
@@ -8650,7 +8792,21 @@ snapshots:
     dependencies:
       is-wsl: 3.1.0
 
+  y18n@5.0.8: {}
+
   yallist@3.1.1: {}
+
+  yargs-parser@21.1.1: {}
+
+  yargs@17.7.2:
+    dependencies:
+      cliui: 8.0.1
+      escalade: 3.2.0
+      get-caller-file: 2.0.5
+      require-directory: 2.1.1
+      string-width: 4.2.3
+      y18n: 5.0.8
+      yargs-parser: 21.1.1
 
   yocto-queue@0.1.0: {}
 

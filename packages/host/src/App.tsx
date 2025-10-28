@@ -1,12 +1,80 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
+import React, { useState, useEffect, lazy, Suspense, ErrorInfo, ReactNode } from 'react'
 import './App.css'
+
+// 错误边界组件
+class ErrorBoundary extends React.Component<
+  { children: ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { hasError: false, error: null }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('ErrorBoundary caught an error:', error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex items-center justify-center h-full bg-red-50 dark:bg-red-900/20 rounded-lg p-6">
+          <div className="text-center">
+            <div className="text-4xl mb-4">⚠️</div>
+            <h3 className="text-lg font-semibold text-red-900 dark:text-red-200 mb-2">
+              组件加载失败
+            </h3>
+            <p className="text-sm text-red-700 dark:text-red-300 mb-4">
+              {this.state.error?.message || '远程组件加载时出现错误'}
+            </p>
+            <button
+              onClick={() => this.setState({ hasError: false, error: null })}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              重试
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
 
 // 动态导入远程组件
 const RemoteComponent1 = lazy(() => import('rdc_test_1/App'))
 const RemoteComponent2 = lazy(() => import('rdc_test_form/App'))
 const RemoteComponent3 = lazy(() => import('rdc_test_table/App'))
+const RemoteComponent4 = lazy(() => import('rdc_test_editor/App'))
 
-type RdcType = 'rdc1' | 'rdc2' | 'rdc3'
+// 简化的包装组件
+const RemoteComponentWrapper: React.FC<{ component: React.ComponentType }> = ({ component: Component }) => {
+  try {
+    return <Component />
+  } catch (error) {
+    console.error('Remote component error:', error)
+    return (
+      <div className="flex items-center justify-center h-full bg-red-50 dark:bg-red-900/20 rounded-lg p-6">
+        <div className="text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h3 className="text-lg font-semibold text-red-900 dark:text-red-200 mb-2">
+            组件加载失败
+          </h3>
+          <p className="text-sm text-red-700 dark:text-red-300">
+            远程组件渲染时出现错误
+          </p>
+        </div>
+      </div>
+    )
+  }
+}
+
+type RdcType = 'rdc1' | 'rdc2' | 'rdc3' | 'rdc4'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -60,7 +128,7 @@ function App() {
                     className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
                       currentRdc === 'rdc1'
                         ? 'bg-indigo-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                        : ' dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
                     RDC Test 1
@@ -70,7 +138,7 @@ function App() {
                     className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
                       currentRdc === 'rdc2'
                         ? 'bg-indigo-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                        : ' dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
                     RDC Test Form
@@ -80,10 +148,20 @@ function App() {
                     className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
                       currentRdc === 'rdc3'
                         ? 'bg-indigo-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                        : ' dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
                     RDC Test Table
+                  </button>
+                  <button
+                    onClick={() => setCurrentRdc('rdc4')}
+                    className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                      currentRdc === 'rdc4'
+                        ? 'bg-indigo-600 text-white'
+                        : ' dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    }`}
+                  >
+                    Canvas 编辑器
                   </button>
                 </div>
               </div>
@@ -131,18 +209,21 @@ function App() {
               </h2>
               <div className="min-h-[200px]">
                 {showRemote && (
-                  <Suspense fallback={
-                    <div className="flex items-center justify-center h-full">
-                      <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-                        <p className="text-gray-600 dark:text-gray-300">加载远程组件中...</p>
+                  <ErrorBoundary>
+                    <Suspense fallback={
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                          <p className="text-gray-600 dark:text-gray-300">加载远程组件中...</p>
+                        </div>
                       </div>
-                    </div>
-                  }>
-                    {currentRdc === 'rdc1' ? <RemoteComponent1 /> : 
-                     currentRdc === 'rdc2' ? <RemoteComponent2 /> : 
-                     <RemoteComponent3 />}
-                  </Suspense>
+                    }>
+                      {currentRdc === 'rdc1' ? <RemoteComponentWrapper component={RemoteComponent1} /> : 
+                       currentRdc === 'rdc2' ? <RemoteComponentWrapper component={RemoteComponent2} /> : 
+                       currentRdc === 'rdc3' ? <RemoteComponentWrapper component={RemoteComponent3} /> : 
+                       <RemoteComponentWrapper component={RemoteComponent4} />}
+                    </Suspense>
+                  </ErrorBoundary>
                 )}
               </div>
             </div>

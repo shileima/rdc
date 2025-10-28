@@ -81,18 +81,25 @@ const prodConfig = {
       exposes: {
         './App': './src/bootstrap.tsx',
       },
+      // 示例：配置远程组件
+      // remotes: {
+      //   remoteComponent: `remoteComponent@https://example.com/remoteEntry.js`,
+      // },
       shared: {
         react: {
           singleton: true,
           requiredVersion: packageJson.dependencies.react,
+          eager: true,
         },
         'react-dom': {
           singleton: true,
           requiredVersion: packageJson.dependencies['react-dom'],
+          eager: true,
         },
         antd: {
           singleton: true,
           requiredVersion: packageJson.devDependencies.antd,
+          eager: true,
         },
       },
     }),
