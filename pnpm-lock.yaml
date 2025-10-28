@@ -33,21 +33,24 @@ importers:
   packages/host:
     dependencies:
       react:
-        specifier: ^19.0.0
-        version: 19.2.0
+        specifier: ^18.3.1
+        version: 18.3.1
       react-dom:
-        specifier: ^19.0.0
-        version: 19.2.0(react@19.2.0)
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
     devDependencies:
       '@eslint/js':
         specifier: ^9.38.0
         version: 9.38.0
+      '@originjs/vite-plugin-federation':
+        specifier: ^1.4.1
+        version: 1.4.1
       '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.2
+        specifier: ^18.3.0
+        version: 18.3.26
       '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.2(@types/react@19.2.2)
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.26)
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.0.0
         version: 8.46.2(@typescript-eslint/parser@8.46.2(eslint@9.38.0(jiti@1.21.7))(typescript@5.8.3))(eslint@9.38.0(jiti@1.21.7))(typescript@5.8.3)
@@ -85,7 +88,89 @@ importers:
         specifier: ^6.0.0
         version: 6.4.1(@types/node@20.17.47)(jiti@1.21.7)(terser@5.44.0)
 
-  rdcs/rdc_test_one:
+  rdcs/rdc_test_1:
+    dependencies:
+      '@ant-design/icons':
+        specifier: ^5.5.2
+        version: 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.23.9
+        version: 7.28.4
+      '@babel/preset-env':
+        specifier: ^7.23.9
+        version: 7.28.3(@babel/core@7.28.4)
+      '@babel/preset-react':
+        specifier: ^7.23.3
+        version: 7.27.1(@babel/core@7.28.4)
+      '@babel/preset-typescript':
+        specifier: ^7.23.3
+        version: 7.27.1(@babel/core@7.28.4)
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.26
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.26)
+      antd:
+        specifier: 5.22.2
+        version: 5.22.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.4.21(postcss@8.5.6)
+      babel-loader:
+        specifier: ^9.1.3
+        version: 9.2.1(@babel/core@7.28.4)(webpack@5.102.1)
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
+      css-loader:
+        specifier: ^6.10.0
+        version: 6.11.0(webpack@5.102.1)
+      css-minimizer-webpack-plugin:
+        specifier: ^7.0.2
+        version: 7.0.2(webpack@5.102.1)
+      html-webpack-plugin:
+        specifier: ^5.6.0
+        version: 5.6.4(webpack@5.102.1)
+      mini-css-extract-plugin:
+        specifier: ^2.9.2
+        version: 2.9.4(webpack@5.102.1)
+      postcss:
+        specifier: ^8.4.47
+        version: 8.5.6
+      postcss-loader:
+        specifier: ^8.1.0
+        version: 8.2.0(postcss@8.5.6)(typescript@5.7.2)(webpack@5.102.1)
+      style-loader:
+        specifier: ^3.3.4
+        version: 3.3.4(webpack@5.102.1)
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.18
+      typescript:
+        specifier: 5.7.2
+        version: 5.7.2
+      webpack:
+        specifier: ^5.90.3
+        version: 5.102.1(webpack-cli@5.1.4)
+      webpack-cli:
+        specifier: ^5.1.4
+        version: 5.1.4(webpack-dev-server@5.2.2)(webpack@5.102.1)
+      webpack-dev-server:
+        specifier: ^5.0.2
+        version: 5.2.2(webpack-cli@5.1.4)(webpack@5.102.1)
+      webpack-merge:
+        specifier: ^6.0.1
+        version: 6.0.1
+
+  rdcs/rdc_test_form:
     dependencies:
       '@ant-design/icons':
         specifier: ^5.5.2
@@ -1074,6 +1159,10 @@ packages:
     resolution: {integrity: sha1-6Vc36LtnRt3t9pxVaVNJTxlv5po=, tarball: http://r.npm.sankuai.com/@nodelib/fs.walk/download/@nodelib/fs.walk-1.2.8.tgz}
     engines: {node: '>= 8'}
 
+  '@originjs/vite-plugin-federation@1.4.1':
+    resolution: {integrity: sha1-5qvI8Y8s+CeD64eFP00D5jWLQ8I=, tarball: http://r.npm.sankuai.com/@originjs/vite-plugin-federation/download/@originjs/vite-plugin-federation-1.4.1.tgz}
+    engines: {node: '>=14.0.0', pnpm: '>=7.0.1'}
+
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha1-p36nQvqyV3UUVDTrHSMoz1ATrDM=, tarball: http://r.npm.sankuai.com/@pkgjs/parseargs/download/@pkgjs/parseargs-0.11.0.tgz}
     engines: {node: '>=14'}
@@ -1346,16 +1435,8 @@ packages:
     peerDependencies:
       '@types/react': ^18.0.0
 
-  '@types/react-dom@19.2.2':
-    resolution: {integrity: sha1-pMyHR5e33cnLGA7w1dwj9Zb8IzI=, tarball: http://r.npm.sankuai.com/@types/react-dom/download/@types/react-dom-19.2.2.tgz}
-    peerDependencies:
-      '@types/react': ^19.2.0
-
   '@types/react@18.3.26':
     resolution: {integrity: sha1-TFlwh40w2z0qC8oeTrXyWOORu+s=, tarball: http://r.npm.sankuai.com/@types/react/download/@types/react-18.3.26.tgz}
-
-  '@types/react@19.2.2':
-    resolution: {integrity: sha1-uhI6ddTCpRFYaXFgpOov9wqmvzY=, tarball: http://r.npm.sankuai.com/@types/react/download/@types/react-19.2.2.tgz}
 
   '@types/retry@0.12.2':
     resolution: {integrity: sha1-7SeaZPpDi7afJIDtpEk3kSu3SAo=, tarball: http://r.npm.sankuai.com/@types/retry/download/@types/retry-0.12.2.tgz}
@@ -2196,6 +2277,9 @@ packages:
     resolution: {integrity: sha1-LupSkHAvJquP5TcDcP+GyWXSESM=, tarball: http://r.npm.sankuai.com/estraverse/download/estraverse-5.3.0.tgz}
     engines: {node: '>=4.0'}
 
+  estree-walker@3.0.3:
+    resolution: {integrity: sha1-Z8PlSexAKkh7T8GT0ZU6UkdSNA0=, tarball: http://r.npm.sankuai.com/estree-walker/download/estree-walker-3.0.3.tgz}
+
   esutils@2.0.3:
     resolution: {integrity: sha1-dNLrTeC42hKTcRkQ1Qd1ubcQ72Q=, tarball: http://r.npm.sankuai.com/esutils/download/esutils-2.0.3.tgz}
     engines: {node: '>=0.10.0'}
@@ -2707,6 +2791,10 @@ packages:
 
   lru-cache@5.1.1:
     resolution: {integrity: sha1-HaJ+ZxAnGUdpXa9oSOhH8B2EuSA=, tarball: http://r.npm.sankuai.com/lru-cache/download/lru-cache-5.1.1.tgz}
+
+  magic-string@0.27.0:
+    resolution: {integrity: sha1-5KNBO0urbZjSvs/9SLSiV+/9u/M=, tarball: http://r.npm.sankuai.com/magic-string/download/magic-string-0.27.0.tgz}
+    engines: {node: '>=12'}
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha1-oN10voHiqlwvJ+Zc4oNgXuTit/k=, tarball: http://r.npm.sankuai.com/math-intrinsics/download/math-intrinsics-1.1.0.tgz}
@@ -3508,11 +3596,6 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
-  react-dom@19.2.0:
-    resolution: {integrity: sha1-AO0elZw2XpqdSPiRg3dGVGbsOvg=, tarball: http://r.npm.sankuai.com/react-dom/download/react-dom-19.2.0.tgz}
-    peerDependencies:
-      react: ^19.2.0
-
   react-is@18.3.1:
     resolution: {integrity: sha1-6DVX3BLq5jqZ4AOkY4ix3LtE234=, tarball: http://r.npm.sankuai.com/react-is/download/react-is-18.3.1.tgz}
 
@@ -3522,10 +3605,6 @@ packages:
 
   react@18.3.1:
     resolution: {integrity: sha1-SauJIAnFOTNiW9FrJTP8dUyrKJE=, tarball: http://r.npm.sankuai.com/react/download/react-18.3.1.tgz}
-    engines: {node: '>=0.10.0'}
-
-  react@19.2.0:
-    resolution: {integrity: sha1-0z3RchaY9Ddq5XpUCYy0f8ddk6U=, tarball: http://r.npm.sankuai.com/react/download/react-19.2.0.tgz}
     engines: {node: '>=0.10.0'}
 
   read-cache@1.0.0:
@@ -3643,9 +3722,6 @@ packages:
 
   scheduler@0.23.2:
     resolution: {integrity: sha1-QUumSjsoKJLpRM8hCOzAeNEVzcM=, tarball: http://r.npm.sankuai.com/scheduler/download/scheduler-0.23.2.tgz}
-
-  scheduler@0.27.0:
-    resolution: {integrity: sha1-DE74LWfR5cHjWej8dtOofwRf5b0=, tarball: http://r.npm.sankuai.com/scheduler/download/scheduler-0.27.0.tgz}
 
   schema-utils@4.3.3:
     resolution: {integrity: sha1-WxhQkS+jHfkHFpY9RdkSH9/An0Y=, tarball: http://r.npm.sankuai.com/schema-utils/download/schema-utils-4.3.3.tgz}
@@ -5186,6 +5262,11 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
+  '@originjs/vite-plugin-federation@1.4.1':
+    dependencies:
+      estree-walker: 3.0.3
+      magic-string: 0.27.0
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -5437,17 +5518,9 @@ snapshots:
     dependencies:
       '@types/react': 18.3.26
 
-  '@types/react-dom@19.2.2(@types/react@19.2.2)':
-    dependencies:
-      '@types/react': 19.2.2
-
   '@types/react@18.3.26':
     dependencies:
       '@types/prop-types': 15.7.15
-      csstype: 3.1.3
-
-  '@types/react@19.2.2':
-    dependencies:
       csstype: 3.1.3
 
   '@types/retry@0.12.2': {}
@@ -6445,6 +6518,10 @@ snapshots:
 
   estraverse@5.3.0: {}
 
+  estree-walker@3.0.3:
+    dependencies:
+      '@types/estree': 1.0.8
+
   esutils@2.0.3: {}
 
   etag@1.8.1: {}
@@ -6956,6 +7033,10 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
+
+  magic-string@0.27.0:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.5
 
   math-intrinsics@1.1.0: {}
 
@@ -7785,11 +7866,6 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-dom@19.2.0(react@19.2.0):
-    dependencies:
-      react: 19.2.0
-      scheduler: 0.27.0
-
   react-is@18.3.1: {}
 
   react-refresh@0.17.0: {}
@@ -7797,8 +7873,6 @@ snapshots:
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
-
-  react@19.2.0: {}
 
   read-cache@1.0.0:
     dependencies:
@@ -7939,8 +8013,6 @@ snapshots:
   scheduler@0.23.2:
     dependencies:
       loose-envify: 1.4.0
-
-  scheduler@0.27.0: {}
 
   schema-utils@4.3.3:
     dependencies:
