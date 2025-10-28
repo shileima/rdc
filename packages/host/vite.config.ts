@@ -29,6 +29,16 @@ export default defineConfig({
           format: 'var',
           from: 'webpack',
         },
+        rdc_test_table: {
+          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=test').then((res) => res.json()).then((res) => {
+            const host = window.location.origin;
+            const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_table/webpack/' + res.value?.rdc_test_table.test + '/remoteEntry.js';
+            return remoteEntry;
+          })`,
+          externalType: 'promise',
+          format: 'var',
+          from: 'webpack',
+        },
       },
       shared: ['react', 'react-dom'],
     })

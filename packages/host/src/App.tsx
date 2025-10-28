@@ -4,8 +4,9 @@ import './App.css'
 // 动态导入远程组件
 const RemoteComponent1 = lazy(() => import('rdc_test_1/App'))
 const RemoteComponent2 = lazy(() => import('rdc_test_form/App'))
+const RemoteComponent3 = lazy(() => import('rdc_test_table/App'))
 
-type RdcType = 'rdc1' | 'rdc2'
+type RdcType = 'rdc1' | 'rdc2' | 'rdc3'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -74,6 +75,16 @@ function App() {
                   >
                     RDC Test Form
                   </button>
+                  <button
+                    onClick={() => setCurrentRdc('rdc3')}
+                    className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                      currentRdc === 'rdc3'
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                    }`}
+                  >
+                    RDC Test Table
+                  </button>
                 </div>
               </div>
 
@@ -128,7 +139,9 @@ function App() {
                       </div>
                     </div>
                   }>
-                    {currentRdc === 'rdc1' ? <RemoteComponent1 /> : <RemoteComponent2 />}
+                    {currentRdc === 'rdc1' ? <RemoteComponent1 /> : 
+                     currentRdc === 'rdc2' ? <RemoteComponent2 /> : 
+                     <RemoteComponent3 />}
                   </Suspense>
                 )}
               </div>

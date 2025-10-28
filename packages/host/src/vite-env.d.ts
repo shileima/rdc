@@ -11,3 +11,9 @@ declare module 'rdc_test_form/App' {
   const App: ComponentType
   export default App
 }
+
+declare module 'rdc_test_table/App' {
+  import { ComponentType } from 'react'
+  const App: ComponentType
+  export default App
+}
