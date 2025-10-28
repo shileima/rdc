@@ -8,6 +8,8 @@ const fs = require('fs');
 const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../package.json'), 'utf-8'));
 const { ModuleFederationPlugin } = webpack.container;
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 const devConfig = {
   mode: 'development',
   devtool: 'eval-source-map',
@@ -26,12 +28,12 @@ const devConfig = {
         react: {
           singleton: true,
           requiredVersion: packageJson.dependencies.react,
-          eager: true,
+          eager: isDevelopment,
         },
         'react-dom': {
           singleton: true,
           requiredVersion: packageJson.dependencies['react-dom'],
-          eager: true,
+          eager: isDevelopment,
         },
       },
     }),

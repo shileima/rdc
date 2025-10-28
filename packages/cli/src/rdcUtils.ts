@@ -17,7 +17,7 @@ export function copyRdcFiles(templatePath: string, projectPath: string, config: 
       if (config.templateType === 'webpack') {
         pkg.scripts = {
           ...pkg.scripts,
-          'dev': 'npx webpack serve --config scripts/webpack.dev.config.js',
+          'dev': 'cross-env NODE_ENV=development npx webpack serve --config scripts/webpack.dev.config.js',
           'build:test': 'cross-env NODE_ENV=test npx webpack --config scripts/webpack.prod.config.js',
           'build:staging': 'cross-env NODE_ENV=staging npx webpack --config scripts/webpack.prod.config.js',
           'build:prod': 'cross-env NODE_ENV=production npx webpack --config scripts/webpack.prod.config.js',
