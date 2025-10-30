@@ -91,9 +91,9 @@ function App() {
       <div className="px-[200px] py-8 h-full">
         <div className="mx-auto h-full flex flex-col">
           <header className="text-center mb-4 flex-shrink-0">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4">
+            {/* <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4">
               RDC Host
-            </h1>
+            </h1> */}
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
               基于 React + Vite + Module Federation 的微前端主应用
             </p>

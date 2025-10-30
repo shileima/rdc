@@ -5,9 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build:raw": "tsc && vite build",
+    "build:prod": "webstatic build --appkey=com.sankuai.waimaiqafc.automan --env=prod --build-command='pnpm run build:raw' --token=c33e2ea3-a430-4369-b776-36a82aa9941d",
+    "build:staging": "webstatic build --appkey=com.sankuai.waimaiqafc.automan --env=staging --build-command='pnpm run build:raw' --token=c33e2ea3-a430-4369-b776-36a82aa9941d",
+    "build:test": "webstatic build --appkey=com.sankuai.waimaiqafc.automan --env=test --build-command='pnpm run build:raw' --token=c33e2ea3-a430-4369-b776-36a82aa9941d",
+    "deploy:prod": "webstatic deploy --appkey=com.sankuai.waimaiqafc.automan --env=prod --artifact=dist --token=c33e2ea3-a430-4369-b776-36a82aa9941d",
+    "deploy:staging": "webstatic deploy --appkey=com.sankuai.waimaiqafc.automan --env=staging --artifact=dist --token=c33e2ea3-a430-4369-b776-36a82aa9941d",
+    "deploy:test": "webstatic deploy --appkey=com.sankuai.waimaiqafc.automan --env=test --artifact=dist --token=c33e2ea3-a430-4369-b776-36a82aa9941d",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release": "pnpm build:test && pnpm deploy:test"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -22,6 +29,7 @@
     "@typescript-eslint/parser": "^8.0.0",
     "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9.0.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.0",
