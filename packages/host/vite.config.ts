@@ -13,7 +13,7 @@ export default defineConfig({
       name: 'rdc_component',
       remotes: {
         rdc_test_1: {
-          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=test').then((res) => res.json()).then((res) => {
+          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version').then((res) => res.json()).then((res) => {
             const host = window.location.origin;
             const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_1/webpack/' + res.value?.rdc_test_1.test + '/remoteEntry.js';
             return remoteEntry;
@@ -23,7 +23,7 @@ export default defineConfig({
           from: 'webpack',
         },
         rdc_test_form: {
-          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=test').then((res) => res.json()).then((res) => {
+          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version').then((res) => res.json()).then((res) => {
             const host = window.location.origin;
             const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_form/webpack/' + res.value?.rdc_test_form.test + '/remoteEntry.js';
             return remoteEntry;
@@ -33,7 +33,7 @@ export default defineConfig({
           from: 'webpack',
         },
         rdc_test_table: {
-          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=test').then((res) => res.json()).then((res) => {
+          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version').then((res) => res.json()).then((res) => {
             const host = window.location.origin;
             const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_table/webpack/' + res.value?.rdc_test_table.test + '/remoteEntry.js';
             return remoteEntry;
@@ -43,7 +43,7 @@ export default defineConfig({
           from: 'webpack',
         },
         rdc_test_editor: {
-          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=test').then((res) => res.json()).then((res) => {
+          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version').then((res) => res.json()).then((res) => {
             const host = window.location.origin;
             const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_editor/webpack/' + res.value?.rdc_test_editor.test + '/remoteEntry.js';
             return remoteEntry;
@@ -55,6 +55,7 @@ export default defineConfig({
       },
       shared: {
         react: {
+          // @ts-ignore
           singleton: true,
           requiredVersion: '^18.3.1',
           eager: false,
