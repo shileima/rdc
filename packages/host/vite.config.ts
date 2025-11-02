@@ -71,6 +71,13 @@ export default defineConfig({
     port: 9090,
     host: true,
     open: true,
+    proxy: {
+      '/nodeapi': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   build: {
     outDir: 'dist',

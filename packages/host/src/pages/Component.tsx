@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { getEnvFromUrl, getApiBaseUrl } from '../utils'
 
 interface ComponentVersions {
   test?: string
@@ -22,6 +23,13 @@ interface EditModalData {
   versions: ComponentVersions
 }
 
+interface SaveComponentRequest {
+  env: 'dev' | 'test' | 'staging' | 'prod'
+  appkey: string
+  key: string
+  value: Record<string, ComponentVersions>
+}
+
 const Component: React.FC = () => {
   const [components, setComponents] = useState<ComponentData[]>([])
   const [loading, setLoading] = useState<boolean>(true)
@@ -31,12 +39,14 @@ const Component: React.FC = () => {
     staging: '',
     production: ''
   })
+  const [saving, setSaving] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const response = await fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=test')
+        const apiUrl = `${getApiBaseUrl()}/nodeapi/lionConfig?key=rdc_vomponent_version`
+        const response = await fetch(apiUrl)
         const data: ApiResponse = await response.json()
         
         if (data.success && data.value) {
@@ -60,25 +70,81 @@ const Component: React.FC = () => {
 
   const handleEdit = (component: ComponentData) => {
     setEditModal({ componentName: component.componentName, versions: component.versions })
-    setEditVersions({ ...component.versions })
+    // 确保空值也保留
+    setEditVersions({
+      test: component.versions.test || '',
+      staging: component.versions.staging || '',
+      production: component.versions.production || ''
+    })
   }
 
-  const handleSaveVersions = () => {
+  const handleSaveVersions = async () => {
     if (!editModal) return
     
-    // 更新本地状态
-    setComponents(prev => 
-      prev.map(comp => 
-        comp.componentName === editModal.componentName
-          ? { ...comp, versions: editVersions }
-          : comp
-      )
-    )
-    
-    // 这里可以添加保存到后端的逻辑
-    // await saveVersionsToBackend(editModal.componentName, editVersions)
-    
-    setEditModal(null)
+    try {
+      setSaving(true)
+      
+      // 构建更新后的版本数据
+      // 过滤掉空字符串，只保留有值的版本
+      const updatedVersions: ComponentVersions = {}
+      if (editVersions.test && editVersions.test.trim()) {
+        updatedVersions.test = editVersions.test.trim()
+      }
+      if (editVersions.staging && editVersions.staging.trim()) {
+        updatedVersions.staging = editVersions.staging.trim()
+      }
+      if (editVersions.production && editVersions.production.trim()) {
+        updatedVersions.production = editVersions.production.trim()
+      }
+
+      // 构建完整的组件版本对象
+      const updatedValue: Record<string, ComponentVersions> = {}
+      components.forEach(comp => {
+        if (comp.componentName === editModal.componentName) {
+          updatedValue[comp.componentName] = updatedVersions
+        } else {
+          updatedValue[comp.componentName] = comp.versions
+        }
+      })
+
+      // 构建请求数据
+      const requestData: SaveComponentRequest = {
+        env: getEnvFromUrl(),
+        appkey: 'com.sankuai.waimaiqafc.automan',
+        key: 'rdc_vomponent_version',
+        value: updatedValue
+      }
+
+      // 调用 API 保存
+      const apiUrl = `${getApiBaseUrl()}/nodeapi/lionConfig`
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      })
+
+      if (response.ok) {
+        // 更新本地状态
+        setComponents(prev => 
+          prev.map(comp => 
+            comp.componentName === editModal.componentName
+              ? { ...comp, versions: updatedVersions }
+              : comp
+          )
+        )
+        setEditModal(null)
+      } else {
+        console.error('保存版本失败')
+        alert('保存版本失败，请重试')
+      }
+    } catch (error) {
+      console.error('保存版本失败:', error)
+      alert('保存版本失败，请重试')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleCloseModal = () => {
@@ -233,9 +299,10 @@ const Component: React.FC = () => {
               </button>
               <button
                 onClick={handleSaveVersions}
-                className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors"
+                disabled={saving}
+                className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors disabled:bg-blue-700 disabled:cursor-not-allowed"
               >
-                保存版本
+                {saving ? '保存中...' : '保存版本'}
               </button>
             </div>
           </div>

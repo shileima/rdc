@@ -32,6 +32,9 @@ importers:
 
   packages/host:
     dependencies:
+      pinyin-pro:
+        specifier: ^3.27.0
+        version: 3.27.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -3269,6 +3272,9 @@ packages:
   pify@2.3.0:
     resolution: {integrity: sha1-7RQaasBDqEnqWISY59yosVMw6Qw=, tarball: http://r.npm.sankuai.com/pify/download/pify-2.3.0.tgz}
     engines: {node: '>=0.10.0'}
+
+  pinyin-pro@3.27.0:
+    resolution: {integrity: sha1-sT5gojgwZ+WxIxEG95OaLHWRvik=, tarball: http://r.npm.sankuai.com/pinyin-pro/download/pinyin-pro-3.27.0.tgz}
 
   pirates@4.0.7:
     resolution: {integrity: sha1-ZDtKGMQlfIplEEtz8wSc6aChXiI=, tarball: http://r.npm.sankuai.com/pirates/download/pirates-4.0.7.tgz}
@@ -7550,6 +7556,8 @@ snapshots:
   picomatch@4.0.3: {}
 
   pify@2.3.0: {}
+
+  pinyin-pro@3.27.0: {}
 
   pirates@4.0.7: {}
 
