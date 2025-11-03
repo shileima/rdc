@@ -45,7 +45,7 @@ const Component: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const apiUrl = `${getApiBaseUrl()}/nodeapi/lionConfig?key=rdc_vomponent_version`
+        const apiUrl = `${getApiBaseUrl()}/nodeapi/lionConfig?key=rdc_component_version`
         const response = await fetch(apiUrl)
         const data: ApiResponse = await response.json()
         
@@ -111,7 +111,7 @@ const Component: React.FC = () => {
       const requestData: SaveComponentRequest = {
         env: getEnvFromUrl(),
         appkey: 'com.sankuai.waimaiqafc.automan',
-        key: 'rdc_vomponent_version',
+        key: 'rdc_component_version',
         value: updatedValue
       }
 
