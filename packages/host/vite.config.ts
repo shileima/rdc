@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
+import nowPlugin from '@xbot/vite-plugin-now'
 
 const publicPath = process.env.NODE_ENV === 'development' ? '/' : process.env.PUBLIC_PATH;
 
@@ -11,48 +12,11 @@ export default defineConfig({
     react(),
     federation({
       name: 'rdc_component',
-      remotes: {
-        rdc_test_1: {
-          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version').then((res) => res.json()).then((res) => {
-            const host = window.location.origin;
-            const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_1/webpack/' + res.value?.rdc_test_1.test + '/remoteEntry.js';
-            return remoteEntry;
-          })`,
-          externalType: 'promise',
-          format: 'var',
-          from: 'webpack',
-        },
-        rdc_test_form: {
-          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version').then((res) => res.json()).then((res) => {
-            const host = window.location.origin;
-            const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_form/webpack/' + res.value?.rdc_test_form.test + '/remoteEntry.js';
-            return remoteEntry;
-          })`,
-          externalType: 'promise',
-          format: 'var',
-          from: 'webpack',
-        },
-        rdc_test_table: {
-          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version').then((res) => res.json()).then((res) => {
-            const host = window.location.origin;
-            const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_table/webpack/' + res.value?.rdc_test_table.test + '/remoteEntry.js';
-            return remoteEntry;
-          })`,
-          externalType: 'promise',
-          format: 'var',
-          from: 'webpack',
-        },
-        rdc_test_editor: {
-          external: `fetch('https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version').then((res) => res.json()).then((res) => {
-            const host = window.location.origin;
-            const remoteEntry = 'https://aie.waimai.test.sankuai.com/rdc_host/rdc/qa-rdc-rdc_test_editor/webpack/' + res.value?.rdc_test_editor.test + '/remoteEntry.js';
-            return remoteEntry;
-          })`,
-          externalType: 'promise',
-          format: 'var',
-          from: 'webpack',
-        },
-      },
+      // @ts-expect-error - federation plugin 的 Remotes 类型定义不完整，实际支持 Record 类型
+      remotes: nowPlugin({
+        components: ['rdc_test_1', 'rdc_test_form', 'rdc_test_table', 'rdc_test_editor'],
+        env: 'test',
+      }),
       shared: {
         react: {
           // @ts-ignore
