@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { LeftCircleOutlined } from '@ant-design/icons'
 import { getEnvFromUrl, getApiBaseUrl } from '../utils'
 
 interface ComponentVersions {
@@ -31,6 +33,7 @@ interface SaveComponentRequest {
 }
 
 const Component: React.FC = () => {
+  const navigate = useNavigate()
   const [components, setComponents] = useState<ComponentData[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [editModal, setEditModal] = useState<EditModalData | null>(null)
@@ -160,8 +163,17 @@ const Component: React.FC = () => {
     <div className="min-h-screen w-screen bg-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">组件管理平台</h1>
-          <p className="text-gray-400">组件版本管理与上下架状态监控-v1.0.0</p>
+          <div className="flex items-center gap-3 mb-2">
+            <button
+              onClick={() => navigate('/rdc/home')}
+              className="text-blue-500 hover:text-blue-400 transition-colors bg-transparent border-none p-0"
+              aria-label="返回"
+            >
+              <LeftCircleOutlined className="text-3xl" />
+            </button>
+            <h1 className="text-3xl font-bold text-blue-400">组件管理平台</h1>
+          </div>
+          <p className="text-gray-400">组件版本管理与上下架状态监控</p>
         </div>
 
         <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">

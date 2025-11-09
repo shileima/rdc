@@ -1,4 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense, ErrorInfo, ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 
 // 错误边界组件
 class ErrorBoundary extends React.Component<
@@ -76,7 +77,6 @@ const RemoteComponentWrapper: React.FC<{ component: React.ComponentType }> = ({ 
 type RdcType = 'rdc1' | 'rdc2' | 'rdc3' | 'rdc4'
 
 const Home: React.FC = () => {
-  const [count, setCount] = useState(0)
   const [currentRdc, setCurrentRdc] = useState<RdcType>('rdc1')
   const [showRemote, setShowRemote] = useState(false)
 
@@ -100,22 +100,7 @@ const Home: React.FC = () => {
 
           <main className="grid grid-cols-[1fr_2fr] gap-6 flex-1 min-h-0">
             <div className="space-y-6 overflow-y-auto scrollbar-hide">
-              <div className="dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h5 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  计数器示例
-                </h5>
-                <div className="flex items-center justify-start text-center">
-                  <div className="text-left text-5xl font-bold text-indigo-600 dark:text-indigo-400 min-w-[100px]">
-                    {count}
-                  </div>
-                  <button
-                    onClick={() => setCount((count) => count + 1)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                  >
-                    点击 +1
-                  </button>
-                </div>
-              </div>
+              
 
               <div className="dark:bg-gray-800 rounded-lg shadow-lg p-6">
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -130,7 +115,7 @@ const Home: React.FC = () => {
                         : ' dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
-                    RDC Test 1
+                    Test
                   </button>
                   <button
                     onClick={() => setCurrentRdc('rdc2')}
@@ -140,7 +125,7 @@ const Home: React.FC = () => {
                         : ' dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
-                    RDC Test Form
+                    Form
                   </button>
                   <button
                     onClick={() => setCurrentRdc('rdc3')}
@@ -150,7 +135,7 @@ const Home: React.FC = () => {
                         : ' dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
-                    RDC Test Table
+                    Table
                   </button>
                   <button
                     onClick={() => setCurrentRdc('rdc4')}
@@ -160,8 +145,28 @@ const Home: React.FC = () => {
                         : ' dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
-                    Canvas 编辑器
+                    Canvas
                   </button>
+                </div>
+              </div>
+
+              <div className="dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h5 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                  管理入口
+                </h5>
+                <div className="flex gap-3">
+                  <Link
+                    to="/rdc/component"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
+                  >
+                    组件管理
+                  </Link>
+                  <Link
+                    to="/rdc/platform"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
+                  >
+                    平台列表
+                  </Link>
                 </div>
               </div>
 
@@ -172,7 +177,7 @@ const Home: React.FC = () => {
                 <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                   <li className="flex items-center">
                     <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                    React + Vite + TailwindCSS
+                    React + Vite + Typescript + TailwindCSS
                   </li>
                 </ul>
               </div>

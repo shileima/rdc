@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { LeftCircleOutlined } from '@ant-design/icons'
 import { pinyin } from 'pinyin-pro'
 import { getEnvFromUrl, getApiBaseUrl } from '../utils'
 
@@ -36,6 +38,7 @@ interface SavePlatformRequest {
 }
 
 const Platform: React.FC = () => {
+  const navigate = useNavigate()
   const [platforms, setPlatforms] = useState<Platform[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
@@ -402,7 +405,16 @@ const Platform: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">平台列表</h1>
+            <div className="flex items-center gap-3 mb-2">
+              <button
+                onClick={() => navigate('/rdc/home')}
+                className="text-blue-500 hover:text-blue-400 transition-colors bg-transparent border-none p-0"
+                aria-label="返回"
+              >
+                <LeftCircleOutlined className="text-3xl" />
+              </button>
+              <h1 className="text-3xl font-bold text-blue-400">平台列表</h1>
+            </div>
             <p className="text-gray-400">RDC 平台管理与监控</p>
           </div>
           <button
