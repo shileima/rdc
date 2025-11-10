@@ -3,6 +3,16 @@
  * Vite plugin for dynamic RDC component federation
  */
 
+/**
+ * Shared 配置类型
+ */
+export type SharedConfig = Record<string, {
+  singleton?: boolean
+  requiredVersion?: string
+  eager?: boolean
+  [key: string]: unknown
+}>
+
 export interface NowPluginOptions {
   /**
    * RDC 组件列表
@@ -94,6 +104,48 @@ export function generateRemotes(options: NowPluginOptions): Record<string, Remot
     acc[componentName] = createRdcRemoteConfig(componentName, configApiUrl, rdcBaseUrl, env)
     return acc
   }, {} as Record<string, RemoteConfig>)
+}
+
+/**
+ * 默认的 shared 配置
+ */
+export const DEFAULT_SHARED: SharedConfig = {
+  react: {
+    singleton: true,
+    requiredVersion: '^18.3.1',
+    eager: false,
+  },
+  'react-dom': {
+    singleton: true,
+    requiredVersion: '^18.3.1',
+    eager: false,
+  },
+}
+
+/**
+ * 获取 shared 配置，支持覆盖默认配置
+ * @param customShared 自定义 shared 配置，会与默认配置合并
+ * @returns 合并后的 shared 配置
+ */
+export function getSharedConfig(customShared?: SharedConfig): SharedConfig {
+  if (!customShared) {
+    return DEFAULT_SHARED
+  }
+  
+  // 深度合并配置
+  const merged = { ...DEFAULT_SHARED }
+  
+  for (const key in customShared) {
+    if (merged[key]) {
+      // 如果已存在，合并配置
+      merged[key] = { ...merged[key], ...customShared[key] }
+    } else {
+      // 如果不存在，直接添加
+      merged[key] = customShared[key]
+    }
+  }
+  
+  return merged
 }
 
 /**
