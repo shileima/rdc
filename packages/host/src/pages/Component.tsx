@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { getEnvFromUrl, getApiBaseUrl } from '../utils'
+import { message } from 'antd'
 
 interface ComponentVersions {
   test?: string
@@ -30,6 +31,7 @@ interface SaveComponentRequest {
   appkey: string
   key: string
   value: Record<string, ComponentVersions>
+  misId: string
 }
 
 const Component: React.FC = () => {
@@ -45,6 +47,13 @@ const Component: React.FC = () => {
   const [saving, setSaving] = useState<boolean>(false)
 
   useEffect(() => {
+    // 配置 message 暗黑主题样式
+    message.config({
+      top: 24,
+      duration: 3,
+      maxCount: 3,
+    })
+
     const fetchData = async () => {
       try {
         setLoading(true)
@@ -81,6 +90,20 @@ const Component: React.FC = () => {
     })
   }
 
+  const getMisIdFromLocalStorage = () => {
+    try {
+      const userInfoStr = localStorage.getItem('userInfo')
+      if (!userInfoStr) {
+        return ''
+      }
+      const userInfo = JSON.parse(userInfoStr)
+      return userInfo?.sso_account || ''
+    } catch (error) {
+      console.error('获取 userInfo 失败:', error)
+      return ''
+    }
+  }
+
   const handleSaveVersions = async () => {
     if (!editModal) return
     
@@ -110,12 +133,15 @@ const Component: React.FC = () => {
         }
       })
 
+      const misId = getMisIdFromLocalStorage()
+
       // 构建请求数据
       const requestData: SaveComponentRequest = {
         env: getEnvFromUrl(),
         appkey: 'com.sankuai.waimaiqafc.automan',
         key: 'rdc_component_version',
-        value: updatedValue
+        value: updatedValue,
+        misId
       }
 
       // 调用 API 保存
@@ -138,13 +164,14 @@ const Component: React.FC = () => {
           )
         )
         setEditModal(null)
+        message.success('保存版本成功')
       } else {
         console.error('保存版本失败')
-        alert('保存版本失败，请重试')
+        message.error('保存版本失败')
       }
     } catch (error) {
       console.error('保存版本失败:', error)
-      alert('保存版本失败，请重试')
+      message.error('保存版本失败，请重试')
     } finally {
       setSaving(false)
     }
