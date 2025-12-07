@@ -27,6 +27,7 @@ interface EditModalData {
 }
 
 interface SaveComponentRequest {
+  rdcName: string
   env: 'dev' | 'test' | 'staging' | 'prod'
   appkey: string
   key: string
@@ -57,7 +58,7 @@ const Component: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const apiUrl = `${getApiBaseUrl()}/nodeapi/lionConfig?key=rdc_component_version`
+        const apiUrl = getApiUrl('/nodeapi/lionConfig?key=rdc_component_version')
         const response = await fetch(apiUrl)
         const data: ApiResponse = await response.json()
         
@@ -79,6 +80,14 @@ const Component: React.FC = () => {
 
     fetchData()
   }, [])
+
+  // 获取 API URL，开发环境使用相对路径通过 Vite proxy
+  const getApiUrl = (path: string): string => {
+    if (import.meta.env.DEV && (window.location.port === '9090' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      return path
+    }
+    return `${getApiBaseUrl()}${path}`
+  }
 
   const handleEdit = (component: ComponentData) => {
     setEditModal({ componentName: component.componentName, versions: component.versions })
@@ -141,11 +150,12 @@ const Component: React.FC = () => {
         appkey: 'com.sankuai.waimaiqafc.automan',
         key: 'rdc_component_version',
         value: updatedValue,
+        rdcName: editModal.componentName,
         misId
       }
 
       // 调用 API 保存
-      const apiUrl = `${getApiBaseUrl()}/nodeapi/lionConfig`
+      const apiUrl = getApiUrl('/nodeapi/setLionConfig')
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
