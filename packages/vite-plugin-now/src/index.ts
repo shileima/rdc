@@ -3,6 +3,11 @@
  * Vite plugin for dynamic RDC component federation
  */
 
+import type { EnvType, NowPluginOptions, RemoteConfig } from './types'
+
+// 导出类型
+export type { NowPluginEnv, NowPluginOptions, RemoteConfig } from './types'
+
 /**
  * Shared 配置类型
  */
@@ -13,34 +18,11 @@ export type SharedConfig = Record<string, {
   [key: string]: unknown
 }>
 
-export interface NowPluginOptions {
-  /**
-   * RDC 组件列表
-   */
-  components: string[]
-  
-  /**
-   * 环境配置
-   * @default 'test'
-   */
-  env?: 'dev' | 'test' | 'staging' | 'prod'
-  
-  /**
-   * 自定义配置 API URL
-   */
-  configApiUrl?: string
-  
-  /**
-   * 自定义 RDC 基础 URL
-   */
-  rdcBaseUrl?: string
-}
-
 /**
  * 环境配置映射
  */
 const ENV_CONFIG: Record<string, { configApiUrl: string; rdcBaseUrl: string }> = {
-  dev: {
+  development: {
     configApiUrl: 'https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
     rdcBaseUrl: 'https://aie.waimai.test.sankuai.com/rdc_host/rdc',
   },
@@ -49,23 +31,13 @@ const ENV_CONFIG: Record<string, { configApiUrl: string; rdcBaseUrl: string }> =
     rdcBaseUrl: 'https://aie.waimai.test.sankuai.com/rdc_host/rdc',
   },
   staging: {
-    configApiUrl: 'https://automan.waimai.staging.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
-    rdcBaseUrl: 'https://aie.waimai.staging.sankuai.com/rdc_host/rdc',
+    configApiUrl: 'https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
+    rdcBaseUrl: 'https://aie.waimai.test.sankuai.com/rdc_host/rdc',
   },
-  prod: {
-    configApiUrl: 'https://automan.waimai.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
-    rdcBaseUrl: 'https://aie.waimai.sankuai.com/rdc_host/rdc',
+  production: {
+    configApiUrl: 'https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
+    rdcBaseUrl: 'https://aie.waimai.test.sankuai.com/rdc_host/rdc',
   },
-}
-
-/**
- * Remote 配置类型
- */
-export interface RemoteConfig {
-  external: string
-  externalType: string
-  format: string
-  from: string
 }
 
 /**
@@ -75,7 +47,7 @@ function createRdcRemoteConfig(
   componentName: string,
   configApiUrl: string,
   rdcBaseUrl: string,
-  env: string
+  env: EnvType
 ): RemoteConfig {
   const remoteEntryPath = `qa-rdc-${componentName}/webpack/`
   

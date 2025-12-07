@@ -1,7 +1,12 @@
 /**
  * 环境类型
  */
-export type EnvType = 'dev' | 'test' | 'staging' | 'prod'
+export type EnvType = 'development' | 'test' | 'staging' | 'production'
+
+/**
+ * 环境类型（别名，用于导出）
+ */
+export type NowPluginEnv = EnvType
 
 /**
  * Remote 配置类型
@@ -23,8 +28,9 @@ export interface NowPluginOptions {
   components: string[]
   /**
    * 环境类型
+   * @default 'test'
    */
-  env: EnvType
+  env?: EnvType
   /**
    * 自定义配置 API URL（可选）
    */
