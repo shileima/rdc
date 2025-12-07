@@ -163,8 +163,11 @@ const Component: React.FC = () => {
         },
         body: JSON.stringify(requestData)
       })
-
-      if (response.ok) {
+      
+      const result = await response.json()
+      console.log('response result:', result)
+      
+      if (result.success) {
         // 更新本地状态
         setComponents(prev => 
           prev.map(comp => 
@@ -176,8 +179,9 @@ const Component: React.FC = () => {
         setEditModal(null)
         message.success('保存版本成功')
       } else {
-        console.error('保存版本失败')
-        message.error('保存版本失败')
+        const errorMessage = result.message || `保存版本失败 (code: ${result.code || 'unknown'})`
+        console.error('保存版本失败:', errorMessage, 'code:', result.code)
+        message.error(errorMessage)
       }
     } catch (error) {
       console.error('保存版本失败:', error)
