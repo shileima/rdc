@@ -3,22 +3,23 @@
  * @returns 环境标识
  */
 export const getEnvFromUrl = (): 'dev' | 'test' | 'staging' | 'prod' => {
-  const hostname = window.location.hostname
-  const port = window.location.port
+  // const hostname = window.location.hostname
+  // const port = window.location.port
   
-  // 如果是本地环境（9090 端口运行），使用 dev 环境
-  if (hostname.includes('localhost') || hostname === '127.0.0.1' || port === '9090') {
-    return 'dev'
-  } else if (hostname.includes('test.sankuai.com')) {
-    return 'test'
-  } else if (hostname.includes('staging')) {
-    return 'staging'
-  } else if (hostname.includes('prod')) {
-    return 'prod'
-  }
+  // // 如果是本地环境（9090 端口运行），使用 dev 环境
+  // if (hostname.includes('localhost') || hostname === '127.0.0.1' || port === '9090') {
+  //   return 'dev'
+  // } else if (hostname.includes('test.sankuai.com')) {
+  //   return 'test'
+  // } else if (hostname.includes('staging')) {
+  //   return 'staging'
+  // } else if (hostname.includes('prod')) {
+  //   return 'prod'
+  // }
   
-  // 默认返回 test
-  return 'test'
+  // // 默认返回 test
+  // return 'test'
+  return import.meta.env.VITE_APP_LION_ENV as 'dev' | 'test' | 'staging' | 'prod'
 }
 
 /**
@@ -32,10 +33,12 @@ export const getApiBaseUrl = (): string => {
   }
   
   // 如果没有设置环境变量，使用默认逻辑
-  // 如果是本地开发环境（9090 端口），使用 localhost:8080
-  if (import.meta.env.DEV && (window.location.port === '9090' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+  // 开发环境使用 localhost:8080
+  if (import.meta.env.DEV) {
     return 'http://localhost:8080'
   }
+  
+  // 默认返回 test 环境
   return 'https://automan.waimai.test.sankuai.com'
 }
 

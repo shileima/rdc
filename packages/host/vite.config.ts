@@ -5,6 +5,8 @@ import nowPlugin, { getSharedConfig } from '@xbot/vite-plugin-now'
 
 const publicPath = process.env.NODE_ENV === 'development' ? '/' : process.env.PUBLIC_PATH + '/rdc';
 
+console.log('process.env.NODE_ENV-->', process.env.NODE_ENV)
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: publicPath,
