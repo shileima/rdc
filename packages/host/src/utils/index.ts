@@ -26,6 +26,12 @@ export const getEnvFromUrl = (): 'dev' | 'test' | 'staging' | 'prod' => {
  * @returns API 基础 URL
  */
 export const getApiBaseUrl = (): string => {
+  // 优先使用环境变量 VITE_APP_API_HOST
+  if (import.meta.env.VITE_APP_API_HOST) {
+    return import.meta.env.VITE_APP_API_HOST
+  }
+  
+  // 如果没有设置环境变量，使用默认逻辑
   // 如果是本地开发环境（9090 端口），使用 localhost:8080
   if (import.meta.env.DEV && (window.location.port === '9090' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
     return 'http://localhost:8080'

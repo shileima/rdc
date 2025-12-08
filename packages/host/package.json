@@ -14,7 +14,8 @@
     "deploy:test": "webstatic deploy --appkey=com.sankuai.waimaiqafc.automan --env=test --artifact=dist --token=c33e2ea3-a430-4369-b776-36a82aa9941d",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "release": "pnpm build:test && pnpm deploy:test"
+    "release:test": "pnpm build:test && pnpm deploy:test",
+    "release": "pnpm build:staging && pnpm deploy:staging"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",

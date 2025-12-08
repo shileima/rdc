@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
 import nowPlugin, { getSharedConfig } from '@xbot/vite-plugin-now'
 
-const publicPath = process.env.NODE_ENV === 'development' ? '/' : process.env.PUBLIC_PATH;
+const publicPath = process.env.NODE_ENV === 'development' ? '/' : process.env.PUBLIC_PATH + '/rdc';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -33,7 +33,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'dist',
+    outDir: 'dist/rdc',
     sourcemap: true,
     target: 'esnext'
   }

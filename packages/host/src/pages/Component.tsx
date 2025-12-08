@@ -83,9 +83,9 @@ const Component: React.FC = () => {
 
   // 获取 API URL，开发环境使用相对路径通过 Vite proxy
   const getApiUrl = (path: string): string => {
-    if (import.meta.env.DEV && (window.location.port === '9090' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-      return path
-    }
+    // if (import.meta.env.DEV && (window.location.port === '9090' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    //   return path
+    // }
     return `${getApiBaseUrl()}${path}`
   }
 
