@@ -1,6 +1,6 @@
 {
   "name": "@xbot/vite-plugin-now",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Vite plugin for dynamic RDC component federation",
   "type": "module",
   "main": "./dist/index.js",

@@ -53,7 +53,7 @@ function createRdcRemoteConfig(
   
   return {
     external: `fetch('${configApiUrl}').then((res) => res.json()).then((res) => {
-      const remoteEntry = '${rdcBaseUrl}/${remoteEntryPath}' + res.value?.${componentName}.${env} + '/remoteEntry.js';
+      const remoteEntry = '${rdcBaseUrl}/${remoteEntryPath}' + res.value?.${componentName}.${env || 'test'} + '/remoteEntry.js';
       return remoteEntry;
     })`,
     externalType: 'promise',
