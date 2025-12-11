@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LeftCircleOutlined } from '@ant-design/icons'
+import { LeftCircleOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons'
 import { getEnvFromUrl, getApiBaseUrl } from '../utils'
-import { message, Modal } from 'antd'
+import { message, Modal, Select, Avatar, Spin } from 'antd'
 
 interface ComponentVersions {
   development?: string
@@ -51,6 +51,37 @@ interface UserInfo {
   subjectType: string
 }
 
+interface MiscUser {
+  avatarUrl: string
+  avatar_url: string
+  bigAvatarUrl: string
+  big_avatar_url: string
+  orgPath: string
+  orgPathName: string
+  headName: string
+  orgId: string
+  name: string
+  orgName: string
+  account: string
+  jobStatus: string | null
+}
+
+interface MiscListResponse {
+  code: number
+  msg: string
+  data: MiscUser[]
+}
+
+interface RdcInfo {
+  key: string
+  label: string
+  devVersions?: Array<{ type: string; version: string }>
+  testVersions?: Array<{ type: string; version: string }>
+  stagingVersions?: Array<{ type: string; version: string }>
+  productionVersions?: Array<{ type: string; version: string }>
+  admins?: string[]
+}
+
 const Component: React.FC = () => {
   const navigate = useNavigate()
   const [components, setComponents] = useState<ComponentData[]>([])
@@ -74,6 +105,12 @@ const Component: React.FC = () => {
   })
   const [autoFilledFields, setAutoFilledFields] = useState<Set<string>>(new Set())
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
+  const [permissionModalVisible, setPermissionModalVisible] = useState<boolean>(false)
+  const [currentRdcName, setCurrentRdcName] = useState<string>('')
+  const [selectedAdmins, setSelectedAdmins] = useState<MiscUser[]>([])
+  const [searchKeyword, setSearchKeyword] = useState<string>('')
+  const [searchResults, setSearchResults] = useState<MiscUser[]>([])
+  const [searching, setSearching] = useState<boolean>(false)
 
   useEffect(() => {
     // 配置 message 暗黑主题样式
@@ -272,6 +309,197 @@ const Component: React.FC = () => {
 
   const getVersionDisplay = (version: string | undefined): string => {
     return version && version.trim() ? version : '暂无'
+  }
+
+  const handleOpenPermissionModal = async (rdcName: string) => {
+    setCurrentRdcName(rdcName)
+    setPermissionModalVisible(true)
+    
+    // 加载当前权限列表
+    try {
+      const apiUrl = getApiUrl(`/nodeapi/lionConfig?key=rdc_info_${rdcName}`)
+      const response = await fetch(apiUrl)
+      const data: ApiResponse = await response.json()
+      
+      if (data.success && data.value) {
+        const rdcInfo = (data.value as unknown) as RdcInfo
+        const adminAccounts = rdcInfo.admins || []
+        
+        // 根据 account 获取用户详细信息
+        const adminUsers: MiscUser[] = []
+        for (const account of adminAccounts) {
+          try {
+            const searchUrl = `https://eci.sankuai.com/api/qa/v1/common/getMiscListDetail?name=${account}`
+            const searchResponse = await fetch(searchUrl)
+            const searchData: MiscListResponse = await searchResponse.json()
+            if (searchData.code === 0 && searchData.data && searchData.data.length > 0) {
+              adminUsers.push(searchData.data[0])
+            }
+          } catch (error) {
+            console.error(`获取用户 ${account} 信息失败:`, error)
+          }
+        }
+        setSelectedAdmins(adminUsers)
+      } else {
+        setSelectedAdmins([])
+      }
+    } catch (error) {
+      console.error('获取权限信息失败:', error)
+      setSelectedAdmins([])
+    }
+  }
+
+  const handleClosePermissionModal = () => {
+    setPermissionModalVisible(false)
+    setCurrentRdcName('')
+    setSelectedAdmins([])
+    setSearchKeyword('')
+    setSearchResults([])
+  }
+
+  const fetchMiscUsers = useCallback(async (search: string): Promise<MiscUser[]> => {
+    if (!search.trim()) {
+      return []
+    }
+    
+    try {
+      setSearching(true)
+      const searchUrl = `https://eci.sankuai.com/api/qa/v1/common/getMiscListDetail?name=${search}`
+      const response = await fetch(searchUrl)
+      const data: MiscListResponse = await response.json()
+      
+      if (data.code === 0 && data.data) {
+        // 过滤掉已经选中的用户
+        const selectedAccounts = selectedAdmins.map(admin => admin.account)
+        return data.data.filter(user => !selectedAccounts.includes(user.account))
+      }
+      return []
+    } catch (error) {
+      console.error('搜索用户失败:', error)
+      return []
+    } finally {
+      setSearching(false)
+    }
+  }, [selectedAdmins])
+
+  // 简单的 debounce 实现
+  const debounce = (func: (search: string, callback: (users: MiscUser[]) => void) => void, wait: number) => {
+    let timeout: ReturnType<typeof setTimeout> | null = null
+    return function executedFunction(search: string, callback: (users: MiscUser[]) => void) {
+      const later = () => {
+        timeout = null
+        func(search, callback)
+      }
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(later, wait)
+    }
+  }
+
+  const debouncedFetchMiscUsers = useMemo(
+    () => debounce((search: string, callback: (users: MiscUser[]) => void) => {
+      fetchMiscUsers(search).then(callback)
+    }, 300),
+    [fetchMiscUsers]
+  )
+
+  const handleSelectUser = (user: MiscUser) => {
+    if (!selectedAdmins.find(admin => admin.account === user.account)) {
+      setSelectedAdmins([...selectedAdmins, user])
+    }
+    setSearchKeyword('')
+    setSearchResults([])
+  }
+
+  const handleRemoveAdmin = (account: string) => {
+    setSelectedAdmins(selectedAdmins.filter(admin => admin.account !== account))
+  }
+
+  const handleSavePermissions = async () => {
+    try {
+      setSaving(true)
+      
+      // 获取当前的 rdc_info 数据
+      const apiUrl = getApiUrl(`/nodeapi/lionConfig?key=rdc_info_${currentRdcName}`)
+      const response = await fetch(apiUrl)
+      const data: ApiResponse = await response.json()
+      
+      let rdcInfo: RdcInfo
+      
+      // 检查 data.value 是否存在且是对象类型（不是字符串错误消息）
+      const isValidRdcInfo = data.success && 
+                             data.value && 
+                             typeof data.value === 'object' && 
+                             !Array.isArray(data.value) &&
+                             !(data.value instanceof String)
+      
+      if (isValidRdcInfo) {
+        // 如果已存在，使用现有数据，确保 admins 字段存在
+        rdcInfo = {
+          ...(data.value as unknown as RdcInfo),
+          admins: (data.value as unknown as RdcInfo).admins || []
+        }
+      } else {
+        // 如果不存在或返回错误，从组件数据中构建新的 rdc_info
+        const currentComponent = components.find(comp => comp.componentName === currentRdcName)
+        const componentVersions = currentComponent?.versions || {}
+        
+        // 构建版本数组，格式: [{type: "latest", version: "版本号"}]
+        const buildVersionArray = (version: string | undefined): Array<{ type: string; version: string }> => {
+          if (version && version.trim()) {
+            return [{ type: 'latest', version: version.trim() }]
+          }
+          return []
+        }
+        
+        rdcInfo = {
+          key: `rdc_info_${currentRdcName}`,
+          label: currentRdcName, // 可以根据需要修改为更友好的显示名称
+          devVersions: buildVersionArray(componentVersions.development),
+          testVersions: buildVersionArray(componentVersions.test),
+          stagingVersions: buildVersionArray(componentVersions.staging),
+          productionVersions: buildVersionArray(componentVersions.production),
+          admins: []
+        }
+      }
+      
+      // 更新 admins 字段
+      rdcInfo.admins = selectedAdmins.map(admin => admin.account)
+      
+      const misId = getMisIdFromLocalStorage()
+      
+      // 保存到 lion
+      const saveUrl = getApiUrl('/nodeapi/setLionConfig')
+      const saveResponse = await fetch(saveUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          env: getEnvFromUrl(),
+          appkey: 'com.sankuai.waimaiqafc.automan',
+          key: `rdc_info_${currentRdcName}`,
+          value: rdcInfo,
+          rdcName: currentRdcName,
+          misId
+        })
+      })
+      
+      const saveResult = await saveResponse.json()
+      
+      if (saveResult.success) {
+        message.success('保存权限成功')
+        handleClosePermissionModal()
+      } else {
+        const errorMessage = saveResult.message || `保存权限失败 (code: ${saveResult.code || 'unknown'})`
+        console.error('保存权限失败:', errorMessage, 'code:', saveResult.code)
+        message.error(errorMessage)
+      }
+    } catch (error) {
+      console.error('保存权限失败:', error)
+      message.error('保存权限失败，请重试')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleAddComponent = () => {
@@ -621,15 +849,25 @@ const Component: React.FC = () => {
                               编辑
                             </button>
                             {userInfo?.login === 'mashilei' && (
-                              <button
-                                onClick={() => handleDelete(component.componentName)}
-                                disabled={deleting === component.componentName}
-                                className="text-red-500 hover:text-red-400 transition-all duration-200 font-medium hover:underline disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:no-underline focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 rounded px-2 py-1"
-                                aria-label={`删除组件 ${component.componentName}`}
-                                tabIndex={0}
-                              >
-                                {deleting === component.componentName ? '删除中...' : '删除'}
-                              </button>
+                              <>
+                                <button
+                                  onClick={() => handleOpenPermissionModal(component.componentName)}
+                                  className="text-gray-400 hover:text-gray-300 transition-all duration-200 font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 rounded px-2 py-1"
+                                  aria-label={`权限管理 ${component.componentName}`}
+                                  tabIndex={0}
+                                >
+                                  权限
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(component.componentName)}
+                                  disabled={deleting === component.componentName}
+                                  className="text-red-500 hover:text-red-400 transition-all duration-200 font-medium hover:underline disabled:text-gray-600 disabled:cursor-not-allowed disabled:hover:no-underline focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 rounded px-2 py-1"
+                                  aria-label={`删除组件 ${component.componentName}`}
+                                  tabIndex={0}
+                                >
+                                  {deleting === component.componentName ? '删除中...' : '删除'}
+                                </button>
+                              </>
                             )}
                           </div>
                         </td>
@@ -656,6 +894,45 @@ const Component: React.FC = () => {
         }
         .animate-fadeIn {
           animation: fadeIn 0.2s ease-out;
+        }
+        .permission-select .ant-select-selector {
+          background-color: #374151 !important;
+          border-color: #4b5563 !important;
+          color: #ffffff !important;
+          height: 42px !important;
+          min-height: 42px !important;
+        }
+        .permission-select .ant-select-selector:hover {
+          border-color: #6b7280 !important;
+        }
+        .permission-select.ant-select-focused .ant-select-selector {
+          border-color: #3b82f6 !important;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+        }
+        .permission-select .ant-select-selection-placeholder {
+          color: #9ca3af !important;
+          line-height: 40px !important;
+        }
+        .permission-select .ant-select-selection-search-input {
+          color: #ffffff !important;
+          height: 40px !important;
+          line-height: 40px !important;
+        }
+        .permission-select .ant-select-selection-item {
+          line-height: 40px !important;
+        }
+        .permission-select-dropdown {
+          background-color: #1f2937 !important;
+        }
+        .permission-select-dropdown .ant-select-item {
+          color: #e5e7eb !important;
+          background-color: #1f2937 !important;
+        }
+        .permission-select-dropdown .ant-select-item:hover {
+          background-color: #374151 !important;
+        }
+        .permission-select-dropdown .ant-select-item-option-selected {
+          background-color: #374151 !important;
         }
       `}</style>
 
@@ -880,6 +1157,163 @@ const Component: React.FC = () => {
                 aria-label="保存版本"
               >
                 {saving ? '保存中...' : '保存版本'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 权限管理弹框 */}
+      {permissionModalVisible && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="permission-modal-title"
+        >
+          <div
+            className="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-2xl transform transition-all duration-300 scale-100 border border-gray-700 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 id="permission-modal-title" className="text-2xl font-bold text-white">
+                权限管理
+              </h2>
+              <button
+                onClick={handleClosePermissionModal}
+                className="text-gray-400 hover:text-gray-200 transition-colors p-1 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                aria-label="关闭权限管理"
+              >
+                <CloseOutlined className="text-xl" />
+              </button>
+            </div>
+
+            {/* 提示信息 */}
+            <div className="mb-6 p-4 bg-blue-900 bg-opacity-20 border-l-4 border-blue-500 rounded-lg">
+              <div className="flex items-start gap-3">
+                <span className="text-blue-400 text-xl font-bold">ℹ</span>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  工作流默认继承其所属空间权限,创建人即为所有者,拥有全部权限,且不可变更。设置自定义权限后,将独立于空间,不再继承。
+                </p>
+              </div>
+            </div>
+
+            {/* 搜索和新增 */}
+            <div className="mb-6">
+              <div className="flex items-stretch gap-3 mb-4">
+                <div className="flex-1">
+                  <Select
+                    showSearch
+                    placeholder="请输入用户名搜索"
+                    value={null}
+                    onSearch={(value) => {
+                      setSearchKeyword(value)
+                      if (value.trim()) {
+                        debouncedFetchMiscUsers(value, (users: MiscUser[]) => {
+                          setSearchResults(users)
+                        })
+                      } else {
+                        setSearchResults([])
+                      }
+                    }}
+                    onChange={(value) => {
+                      if (value) {
+                        const user = searchResults.find(u => u.account === value)
+                        if (user) {
+                          handleSelectUser(user)
+                        }
+                      }
+                    }}
+                    notFoundContent={searching ? <Spin size="small" /> : (searchKeyword ? '未找到用户' : null)}
+                    className="w-full permission-select h-[42px]"
+                    filterOption={false}
+                    style={{ width: '100%', height: '42px' }}
+                    allowClear
+                    popupClassName="permission-select-dropdown"
+                  >
+                    {searchResults.map((user) => (
+                      <Select.Option key={user.account} value={user.account}>
+                        <div className="flex items-center gap-2 py-1">
+                          <Avatar src={user.avatarUrl} size={24} />
+                          <span className="text-gray-200">{user.name}</span>
+                          <span className="text-gray-400 text-xs">({user.account})</span>
+                        </div>
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </div>
+                <button
+                  onClick={() => {
+                    const input = document.querySelector('.ant-select-selection-search-input') as HTMLInputElement
+                    if (input) {
+                      input.focus()
+                    }
+                  }}
+                  className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-all duration-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 h-[42px] flex items-center whitespace-nowrap"
+                >
+                  新增权限
+                </button>
+              </div>
+              
+              <div className="text-sm text-gray-400 font-medium">
+                当前权限: 个人{selectedAdmins.length}
+              </div>
+            </div>
+
+            {/* 当前权限列表 */}
+            {selectedAdmins.length > 0 && (
+              <div className="mb-6">
+                <div className="text-sm font-semibold text-gray-300 mb-4">
+                  个人{selectedAdmins.length}
+                </div>
+                <div className="space-y-3">
+                  {selectedAdmins.map((admin) => (
+                    <div
+                      key={admin.account}
+                      className="flex items-center justify-between p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all duration-200 border border-gray-600 hover:border-gray-500"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Avatar src={admin.avatarUrl} size={40} className="border-2 border-gray-600" />
+                        <div>
+                          <div className="text-sm font-semibold text-gray-200 mb-0.5">{admin.name}</div>
+                          <div className="text-xs text-gray-400">{admin.account}</div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveAdmin(admin.account)}
+                        className="text-gray-400 hover:text-red-400 transition-all duration-200 p-2 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-700"
+                        aria-label={`删除 ${admin.name} 的权限`}
+                      >
+                        <DeleteOutlined className="text-lg" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {selectedAdmins.length === 0 && (
+              <div className="text-center py-12 text-gray-500 text-sm">
+                暂无权限设置
+              </div>
+            )}
+
+            {/* 操作按钮 */}
+            <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-700">
+              <button
+                onClick={handleClosePermissionModal}
+                className="px-6 py-2.5 text-sm font-medium bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                aria-label="取消"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleSavePermissions}
+                disabled={saving}
+                className="px-6 py-2.5 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-all duration-200 disabled:bg-gray-600 disabled:cursor-not-allowed shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transform hover:-translate-y-0.5 disabled:transform-none"
+                aria-label="保存权限"
+              >
+                {saving ? '保存中...' : '保存'}
               </button>
             </div>
           </div>
