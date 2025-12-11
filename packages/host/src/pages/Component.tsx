@@ -5,6 +5,7 @@ import { getEnvFromUrl, getApiBaseUrl } from '../utils'
 import { message } from 'antd'
 
 interface ComponentVersions {
+  development?: string
   test?: string
   staging?: string
   production?: string
@@ -41,6 +42,7 @@ const Component: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [editModal, setEditModal] = useState<EditModalData | null>(null)
   const [editVersions, setEditVersions] = useState<ComponentVersions>({
+    development: '',
     test: '',
     staging: '',
     production: ''
@@ -83,9 +85,10 @@ const Component: React.FC = () => {
 
   // 获取 API URL，开发环境使用相对路径通过 Vite proxy
   const getApiUrl = (path: string): string => {
-    // if (import.meta.env.DEV && (window.location.port === '9090' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    //   return path
-    // }
+    // 开发环境使用相对路径，通过 Vite proxy 代理，避免 CORS 问题
+    if (import.meta.env.DEV) {
+      return path
+    }
     return `${getApiBaseUrl()}${path}`
   }
 
@@ -93,6 +96,7 @@ const Component: React.FC = () => {
     setEditModal({ componentName: component.componentName, versions: component.versions })
     // 确保空值也保留
     setEditVersions({
+      development: component.versions.development || '',
       test: component.versions.test || '',
       staging: component.versions.staging || '',
       production: component.versions.production || ''
@@ -122,6 +126,9 @@ const Component: React.FC = () => {
       // 构建更新后的版本数据
       // 过滤掉空字符串，只保留有值的版本
       const updatedVersions: ComponentVersions = {}
+      if (editVersions.development && editVersions.development.trim()) {
+        updatedVersions.development = editVersions.development.trim()
+      }
       if (editVersions.test && editVersions.test.trim()) {
         updatedVersions.test = editVersions.test.trim()
       }
@@ -193,7 +200,7 @@ const Component: React.FC = () => {
 
   const handleCloseModal = () => {
     setEditModal(null)
-    setEditVersions({ test: '', staging: '', production: '' })
+    setEditVersions({ development: '', test: '', staging: '', production: '' })
   }
 
   const getVersionDisplay = (version: string | undefined): string => {
@@ -250,6 +257,12 @@ const Component: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex flex-col space-y-1">
                             <div className="flex items-center space-x-2">
+                              <span className="text-xs text-gray-400 w-20">development:</span>
+                              <code className="text-xs bg-gray-700 text-gray-200 px-1.5 py-0.5 rounded">
+                                {getVersionDisplay(component.versions.development)}
+                              </code>
+                            </div>
+                            <div className="flex items-center space-x-2">
                               <span className="text-xs text-gray-400 w-20">test:</span>
                               <code className="text-xs bg-gray-700 text-gray-200 px-1.5 py-0.5 rounded">
                                 {getVersionDisplay(component.versions.test)}
@@ -303,6 +316,19 @@ const Component: React.FC = () => {
             </div>
             
             <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-300 mb-1">
+                  Development 环境版本
+                </label>
+                <input
+                  type="text"
+                  value={editVersions.development}
+                  onChange={(e) => setEditVersions({ ...editVersions, development: e.target.value })}
+                  className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="请输入版本号"
+                />
+              </div>
+              
               <div>
                 <label className="block text-xs font-medium text-gray-300 mb-1">
                   Test 环境版本
