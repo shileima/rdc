@@ -23,19 +23,19 @@ export type SharedConfig = Record<string, {
  */
 const ENV_CONFIG: Record<string, { configApiUrl: string; rdcBaseUrl: string }> = {
   development: {
-    configApiUrl: 'https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
+    configApiUrl: 'https://automan.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
     rdcBaseUrl: 'https://aie.waimai.test.sankuai.com/rdc_host/rdc',
   },
   test: {
-    configApiUrl: 'https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
+    configApiUrl: 'https://automan.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
     rdcBaseUrl: 'https://aie.waimai.test.sankuai.com/rdc_host/rdc',
   },
   staging: {
-    configApiUrl: 'https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
+    configApiUrl: 'https://automan.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
     rdcBaseUrl: 'https://aie.waimai.test.sankuai.com/rdc_host/rdc',
   },
   production: {
-    configApiUrl: 'https://automan.waimai.test.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
+    configApiUrl: 'https://automan.sankuai.com/nodeapi/lionConfig?key=rdc_component_version',
     rdcBaseUrl: 'https://aie.waimai.test.sankuai.com/rdc_host/rdc',
   },
 }
