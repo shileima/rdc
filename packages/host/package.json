@@ -15,7 +15,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "release:test": "pnpm build:test && pnpm deploy:test",
-    "release": "pnpm build:staging && pnpm deploy:staging"
+    "release:staging": "pnpm build:staging && pnpm deploy:staging",
+    "release:prod": "pnpm build:prod && pnpm deploy:prod"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
