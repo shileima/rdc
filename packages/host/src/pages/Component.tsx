@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LeftCircleOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons'
+import { LeftCircleOutlined, CloseOutlined, DeleteOutlined, WarningOutlined } from '@ant-design/icons'
 import { getEnvFromUrl, getApiBaseUrl } from '../utils'
 import { message, Modal, Select, Avatar, Spin } from 'antd'
 
@@ -734,8 +734,25 @@ const Component: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-screen bg-gray-900 text-white p-8 md:p-12">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen w-screen text-white p-8 md:p-12 relative overflow-hidden">
+      {/* 炫酷背景渐变 - 动态呼吸 */}
+      <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-blue-900/30 via-purple-900/20 to-gray-900 -z-10 animate-background-breathing"></div>
+      
+      {/* 呼吸灯效果 - 多个渐变球，增强动态效果 */}
+      <div className="fixed top-20 left-1/4 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-3xl -z-10 animate-breathing"></div>
+      <div className="fixed bottom-20 right-1/4 w-[600px] h-[600px] bg-purple-500/18 rounded-full blur-3xl -z-10 animate-breathing-delayed"></div>
+      <div className="fixed top-1/2 left-0 w-[400px] h-[400px] bg-cyan-500/18 rounded-full blur-3xl -z-10 animate-breathing-slow"></div>
+      <div className="fixed top-1/3 right-0 w-[450px] h-[450px] bg-indigo-500/15 rounded-full blur-3xl -z-10 animate-breathing"></div>
+      <div className="fixed bottom-1/3 left-1/2 w-[350px] h-[350px] bg-amber-500/12 rounded-full blur-3xl -z-10 animate-breathing-slow"></div>
+      
+      {/* 动态光效 - 增强呼吸感 */}
+      <div className="fixed inset-0 bg-gradient-to-r from-transparent via-blue-500/10 via-purple-500/6 to-transparent -z-10 animate-shimmer"></div>
+      <div className="fixed inset-0 radial-gradient-breathe -z-10 animate-pulse-slow"></div>
+      
+      {/* 网格背景 - 动态呼吸 */}
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[size:50px_50px] -z-10 animate-grid-breathing"></div>
+      
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* 页面头部 - 增加留白和视觉层级 */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-4">
@@ -749,10 +766,10 @@ const Component: React.FC = () => {
                 <LeftCircleOutlined className="text-2xl" />
               </button>
               <div>
-                <h1 className="text-4xl font-bold text-blue-400 mb-2 tracking-tight">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2 tracking-tight animate-gradient-shift">
                   组件管理平台
                 </h1>
-                <p className="text-base text-gray-400 font-normal">
+                <p className="text-base bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 bg-clip-text text-transparent font-medium">
                   组件版本管理与上下架状态监控
                 </p>
               </div>
@@ -760,7 +777,7 @@ const Component: React.FC = () => {
             {userInfo?.login === 'mashilei' && (
               <button
                 onClick={handleAddComponent}
-                className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-all duration-200 text-sm font-medium border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                className="px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transform hover:-translate-y-0.5"
                 aria-label="新增组件"
                 tabIndex={0}
               >
@@ -770,8 +787,8 @@ const Component: React.FC = () => {
           </div>
         </div>
 
-        {/* 表格卡片 - 现代极简风格 */}
-        <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden transition-shadow duration-300 hover:shadow-xl">
+        {/* 表格卡片 - 商业化风格 */}
+        <div className="bg-gradient-to-br from-gray-800/95 via-gray-800/98 to-gray-800/95 rounded-xl shadow-2xl border border-amber-500/20 overflow-hidden transition-all duration-300 hover:shadow-amber-500/20 hover:border-amber-500/40 backdrop-blur-sm">
           {loading ? (
             <div className="px-8 py-16 text-center">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -781,30 +798,31 @@ const Component: React.FC = () => {
             <>
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-700 border-b border-gray-600">
+                  <thead className="bg-gray-800/60 border-b border-gray-600/50">
                     <tr>
-                      <th className="px-8 py-5 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         组件名称
                       </th>
-                      <th className="px-8 py-5 text-center text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         版本
                       </th>
-                      <th className="px-8 py-5 text-center text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         操作
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-gray-800 divide-y divide-gray-700">
+                  <tbody className="bg-gray-800/50 divide-y divide-amber-500/10">
                     {components.map((component, index) => (
                       <tr
                         key={component.componentName}
-                        className="transition-all duration-200 hover:bg-gray-750 hover:shadow-sm"
+                        className="group transition-all duration-300 border-l-4 border-transparent hover:bg-gradient-to-r hover:from-blue-900/30 hover:via-amber-900/20 hover:to-blue-900/30 hover:shadow-lg hover:border-l-amber-500/70"
                         style={{
-                          animation: `fadeIn 0.3s ease-out ${index * 0.05}s both`
+                          animation: `fadeIn 0.3s ease-out ${index * 0.05}s both`,
+                          borderLeft: '4px solid transparent'
                         }}
                       >
                         <td className="px-8 py-6 whitespace-nowrap">
-                          <span className="text-sm font-semibold text-gray-200">
+                          <span className="text-sm font-bold text-blue-200">
                             {component.componentName}
                           </span>
                         </td>
@@ -813,25 +831,25 @@ const Component: React.FC = () => {
                             <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                               <div className="flex items-center justify-end space-x-3">
                                 <span className="text-xs text-gray-400 font-medium">development:</span>
-                                <code className="text-xs bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg font-mono border border-gray-600 min-w-[60px] text-center">
+                                <code className="text-xs bg-gray-700/50 text-white px-2.5 py-1 rounded-lg font-mono border border-blue-500/40 min-w-[60px] text-center">
                                   {getVersionDisplay(component.versions.development)}
                                 </code>
                               </div>
                               <div className="flex items-center justify-end space-x-3">
                                 <span className="text-xs text-gray-400 font-medium">test:</span>
-                                <code className="text-xs bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg font-mono border border-gray-600 min-w-[60px] text-center">
+                                <code className="text-xs bg-gray-700/50 text-white px-2.5 py-1 rounded-lg font-mono border border-yellow-500/40 min-w-[60px] text-center">
                                   {getVersionDisplay(component.versions.test)}
                                 </code>
                               </div>
                               <div className="flex items-center justify-end space-x-3">
                                 <span className="text-xs text-gray-400 font-medium">staging:</span>
-                                <code className="text-xs bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg font-mono border border-gray-600 min-w-[60px] text-center">
+                                <code className="text-xs bg-gray-700/50 text-white px-2.5 py-1 rounded-lg font-mono border border-orange-500/40 min-w-[60px] text-center">
                                   {getVersionDisplay(component.versions.staging)}
                                 </code>
                               </div>
                               <div className="flex items-center justify-end space-x-3">
                                 <span className="text-xs text-gray-400 font-medium">production:</span>
-                                <code className="text-xs bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg font-mono border border-gray-600 min-w-[60px] text-center">
+                                <code className="text-xs bg-gray-700/50 text-white px-2.5 py-1 rounded-lg font-mono border border-amber-500/50 min-w-[60px] text-center">
                                   {getVersionDisplay(component.versions.production)}
                                 </code>
                               </div>
@@ -895,6 +913,121 @@ const Component: React.FC = () => {
         .animate-fadeIn {
           animation: fadeIn 0.2s ease-out;
         }
+        @keyframes breathing {
+          0%, 100% {
+            opacity: 0.25;
+            transform: scale(1) translate(0, 0);
+          }
+          33% {
+            opacity: 0.5;
+            transform: scale(1.2) translate(20px, -20px);
+          }
+          66% {
+            opacity: 0.35;
+            transform: scale(1.1) translate(-15px, 15px);
+          }
+        }
+        @keyframes breathing-delayed {
+          0%, 100% {
+            opacity: 0.2;
+            transform: scale(1) translate(0, 0);
+          }
+          33% {
+            opacity: 0.45;
+            transform: scale(1.25) translate(-25px, 25px);
+          }
+          66% {
+            opacity: 0.3;
+            transform: scale(1.15) translate(20px, -15px);
+          }
+        }
+        @keyframes breathing-slow {
+          0%, 100% {
+            opacity: 0.22;
+            transform: scale(1) translate(0, 0);
+          }
+          50% {
+            opacity: 0.5;
+            transform: scale(1.15) translate(15px, 20px);
+          }
+        }
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%) skewX(-15deg);
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(200%) skewX(-15deg);
+            opacity: 0;
+          }
+        }
+        @keyframes background-breathing {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.95;
+          }
+        }
+        @keyframes pulse-slow {
+          0%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.5;
+            transform: scale(1.05);
+          }
+        }
+        @keyframes grid-breathing {
+          0%, 100% {
+            opacity: 0.3;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+        .animate-background-breathing {
+          animation: background-breathing 6s ease-in-out infinite;
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 8s ease-in-out infinite;
+        }
+        .animate-grid-breathing {
+          animation: grid-breathing 4s ease-in-out infinite;
+        }
+        .radial-gradient-breathe {
+          background: radial-gradient(circle at center, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+        }
+        .animate-breathing {
+          animation: breathing 4s ease-in-out infinite;
+        }
+        .animate-breathing-delayed {
+          animation: breathing-delayed 5s ease-in-out infinite;
+          animation-delay: 1s;
+        }
+        .animate-breathing-slow {
+          animation: breathing-slow 6s ease-in-out infinite;
+          animation-delay: 2s;
+        }
+        @keyframes gradient-shift {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+        .animate-gradient-shift {
+          background-size: 200% 200%;
+          animation: gradient-shift 3s ease infinite;
+        }
+        .animate-shimmer {
+          animation: shimmer 8s linear infinite;
+        }
         .permission-select .ant-select-selector {
           background-color: #374151 !important;
           border-color: #4b5563 !important;
@@ -939,33 +1072,37 @@ const Component: React.FC = () => {
       {/* 新增组件弹框 */}
       {addModalVisible && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+          className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           aria-labelledby="add-modal-title"
         >
           <div
-            className="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md transform transition-all duration-300 scale-100 border border-gray-700"
+            className="bg-gradient-to-br from-gray-800/95 via-gray-800/98 to-gray-800/95 rounded-xl shadow-2xl p-8 w-full max-w-md transform transition-all duration-300 scale-100 border-2 border-amber-500/30 relative overflow-hidden backdrop-blur-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-8">
-              <h2 id="add-modal-title" className="text-2xl font-bold text-white mb-2">
+            {/* 背景装饰 */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl -z-10"></div>
+            
+            <div className="mb-8 relative z-10">
+              <h2 id="add-modal-title" className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-amber-400 to-blue-400 bg-clip-text text-transparent mb-2">
                 新增组件
               </h2>
-              <p className="text-sm text-gray-400">请输入组件名称和版本信息</p>
+              <p className="text-sm text-gray-300">请输入组件名称和版本信息</p>
             </div>
             
-            <div className="space-y-5">
+            <div className="space-y-5 relative z-10">
               <div>
-                <label htmlFor="new-component-name" className="block text-sm font-semibold text-gray-300 mb-2">
-                  组件名称 <span className="text-red-500">*</span>
+                <label htmlFor="new-component-name" className="block text-sm font-bold text-blue-200 mb-2">
+                  组件名称 <span className="text-red-400">*</span>
                 </label>
                 <input
                   id="new-component-name"
                   type="text"
                   value={newComponentName}
                   onChange={(e) => setNewComponentName(e.target.value)}
-                  className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                  className="w-full text-sm bg-gradient-to-br from-gray-700/80 to-gray-800/80 border-2 border-blue-500/30 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500/60 transition-all duration-200 placeholder-gray-400 shadow-inner"
                   placeholder="请输入组件名称"
                   aria-required="true"
                 />
@@ -981,7 +1118,7 @@ const Component: React.FC = () => {
                     type="text"
                     value={newComponentVersions.development}
                     onChange={(e) => handleNewDevVersionChange(e.target.value)}
-                    className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                    className="w-full text-sm bg-gray-700/50 border border-blue-500/40 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/60 transition-all duration-200 placeholder-gray-400"
                     placeholder="请输入版本号"
                   />
                 </div>
@@ -995,7 +1132,7 @@ const Component: React.FC = () => {
                     type="text"
                     value={newComponentVersions.test}
                     onChange={(e) => handleNewTestVersionChange(e.target.value)}
-                    className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                    className="w-full text-sm bg-gray-700/50 border border-yellow-500/40 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/60 transition-all duration-200 placeholder-gray-400"
                     placeholder="请输入版本号"
                   />
                 </div>
@@ -1015,7 +1152,7 @@ const Component: React.FC = () => {
                       updatedAutoFilled.delete('staging')
                       setAutoFilledFields(updatedAutoFilled)
                     }}
-                    className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                    className="w-full text-sm bg-gray-700/50 border border-orange-500/40 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/60 transition-all duration-200 placeholder-gray-400"
                     placeholder="请输入版本号"
                   />
                 </div>
@@ -1035,17 +1172,17 @@ const Component: React.FC = () => {
                       updatedAutoFilled.delete('production')
                       setAutoFilledFields(updatedAutoFilled)
                     }}
-                    className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                    className="w-full text-sm bg-gray-700/50 border border-amber-500/50 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/60 transition-all duration-200 placeholder-gray-400"
                     placeholder="请输入版本号"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-8">
+            <div className="flex justify-end gap-3 mt-8 relative z-10">
               <button
                 onClick={handleCloseAddModal}
-                className="px-6 py-2.5 text-sm font-medium bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                className="px-6 py-2.5 text-sm font-semibold bg-gray-700/80 text-gray-200 rounded-lg hover:bg-gray-600/80 transition-all duration-200 border border-gray-600/50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 aria-label="取消新增组件"
               >
                 取消
@@ -1053,7 +1190,7 @@ const Component: React.FC = () => {
               <button
                 onClick={handleSaveNewComponent}
                 disabled={saving}
-                className="px-6 py-2.5 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-all duration-200 disabled:bg-gray-600 disabled:cursor-not-allowed shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transform hover:-translate-y-0.5 disabled:transform-none"
+                className="px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 transition-all duration-200 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transform hover:-translate-y-0.5 disabled:transform-none"
                 aria-label="保存新组件"
               >
                 {saving ? '保存中...' : '保存'}
@@ -1066,23 +1203,27 @@ const Component: React.FC = () => {
       {/* 编辑弹框 */}
       {editModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+          className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           aria-labelledby="edit-modal-title"
         >
           <div
-            className="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md transform transition-all duration-300 scale-100 border border-gray-700"
+            className="bg-gradient-to-br from-gray-800/95 via-gray-800/98 to-gray-800/95 rounded-xl shadow-2xl p-8 w-full max-w-md transform transition-all duration-300 scale-100 border-2 border-amber-500/30 relative overflow-hidden backdrop-blur-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-8">
-              <h2 id="edit-modal-title" className="text-2xl font-bold text-white mb-2">
+            {/* 背景装饰 */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl -z-10"></div>
+            
+            <div className="mb-8 relative z-10">
+              <h2 id="edit-modal-title" className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-amber-400 to-blue-400 bg-clip-text text-transparent mb-2">
                 编辑版本
               </h2>
-              <p className="text-sm text-gray-400">{editModal.componentName}</p>
+              <p className="text-sm text-blue-200 font-medium">{editModal.componentName}</p>
             </div>
             
-            <div className="space-y-5">
+            <div className="space-y-5 relative z-10">
               <div className="grid grid-cols-2 gap-x-4 gap-y-5">
                 <div>
                   <label htmlFor="edit-dev-version" className="block text-sm font-semibold text-gray-300 mb-2">
@@ -1093,7 +1234,7 @@ const Component: React.FC = () => {
                     type="text"
                     value={editVersions.development}
                     onChange={(e) => setEditVersions({ ...editVersions, development: e.target.value })}
-                    className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                    className="w-full text-sm bg-gray-700/50 border border-blue-500/40 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/60 transition-all duration-200 placeholder-gray-400"
                     placeholder="请输入版本号"
                   />
                 </div>
@@ -1107,7 +1248,7 @@ const Component: React.FC = () => {
                     type="text"
                     value={editVersions.test}
                     onChange={(e) => setEditVersions({ ...editVersions, test: e.target.value })}
-                    className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                    className="w-full text-sm bg-gray-700/50 border border-yellow-500/40 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/60 transition-all duration-200 placeholder-gray-400"
                     placeholder="请输入版本号"
                   />
                 </div>
@@ -1121,7 +1262,7 @@ const Component: React.FC = () => {
                     type="text"
                     value={editVersions.staging}
                     onChange={(e) => setEditVersions({ ...editVersions, staging: e.target.value })}
-                    className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                    className="w-full text-sm bg-gray-700/50 border border-orange-500/40 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/60 transition-all duration-200 placeholder-gray-400"
                     placeholder="请输入版本号"
                   />
                 </div>
@@ -1135,17 +1276,17 @@ const Component: React.FC = () => {
                     type="text"
                     value={editVersions.production}
                     onChange={(e) => setEditVersions({ ...editVersions, production: e.target.value })}
-                    className="w-full text-sm bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
+                    className="w-full text-sm bg-gray-700/50 border border-amber-500/50 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/60 transition-all duration-200 placeholder-gray-400"
                     placeholder="请输入版本号"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-8">
+            <div className="flex justify-end gap-3 mt-8 relative z-10">
               <button
                 onClick={handleCloseModal}
-                className="px-6 py-2.5 text-sm font-medium bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                className="px-6 py-2.5 text-sm font-semibold bg-gray-700/80 text-gray-200 rounded-lg hover:bg-gray-600/80 transition-all duration-200 border border-gray-600/50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 aria-label="取消编辑"
               >
                 取消
@@ -1153,7 +1294,7 @@ const Component: React.FC = () => {
               <button
                 onClick={handleSaveVersions}
                 disabled={saving}
-                className="px-6 py-2.5 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-all duration-200 disabled:bg-gray-600 disabled:cursor-not-allowed shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transform hover:-translate-y-0.5 disabled:transform-none"
+                className="px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-500 hover:to-indigo-500 transition-all duration-200 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transform hover:-translate-y-0.5 disabled:transform-none"
                 aria-label="保存版本"
               >
                 {saving ? '保存中...' : '保存版本'}
@@ -1166,17 +1307,21 @@ const Component: React.FC = () => {
       {/* 权限管理弹框 */}
       {permissionModalVisible && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+          className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           aria-labelledby="permission-modal-title"
         >
           <div
-            className="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-2xl transform transition-all duration-300 scale-100 border border-gray-700 max-h-[90vh] overflow-y-auto"
+            className="bg-gradient-to-br from-gray-800/95 via-gray-800/98 to-gray-800/95 rounded-xl shadow-2xl p-8 w-full max-w-2xl transform transition-all duration-300 scale-100 border-2 border-amber-500/30 relative overflow-hidden backdrop-blur-sm max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 id="permission-modal-title" className="text-2xl font-bold text-white">
+            {/* 背景装饰 */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl -z-10"></div>
+            
+            <div className="flex items-center justify-between mb-6 relative z-10">
+              <h2 id="permission-modal-title" className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-amber-400 to-blue-400 bg-clip-text text-transparent">
                 权限管理
               </h2>
               <button
@@ -1189,17 +1334,20 @@ const Component: React.FC = () => {
             </div>
 
             {/* 提示信息 */}
-            <div className="mb-6 p-4 bg-blue-900 bg-opacity-20 border-l-4 border-blue-500 rounded-lg">
-              <div className="flex items-start gap-3">
-                <span className="text-blue-400 text-xl font-bold">ℹ</span>
-                <p className="text-sm text-gray-300 leading-relaxed">
-                  工作流默认继承其所属空间权限,创建人即为所有者,拥有全部权限,且不可变更。设置自定义权限后,将独立于空间,不再继承。
+            <div className="mb-6 p-4 bg-gradient-to-r from-blue-900/30 via-blue-800/20 to-transparent border-l-4 border-blue-400 rounded-lg shadow-lg relative overflow-hidden relative z-10">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent"></div>
+              <div className="flex items-center gap-4 relative z-10">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-400/30">
+                  <WarningOutlined className="text-blue-400 text-xl animate-pulse" />
+                </div>
+                <p className="text-sm text-gray-200 leading-relaxed m-0 flex-1 font-medium">
+                  新增权限后，可对该RDC的所有环境进行版本管理，请谨慎操作！
                 </p>
               </div>
             </div>
 
             {/* 搜索和新增 */}
-            <div className="mb-6">
+            <div className="mb-6 relative z-10">
               <div className="flex items-stretch gap-3 mb-4">
                 <div className="flex-1">
                   <Select
@@ -1256,16 +1404,16 @@ const Component: React.FC = () => {
               </div>
               
               <div className="text-sm text-gray-400 font-medium">
-                当前权限: 个人{selectedAdmins.length}
+                当前权限: 个人 {selectedAdmins.length}
               </div>
             </div>
 
             {/* 当前权限列表 */}
             {selectedAdmins.length > 0 && (
-              <div className="mb-6">
-                <div className="text-sm font-semibold text-gray-300 mb-4">
+              <div className="mb-6 relative z-10">
+                {/* <div className="text-sm font-semibold text-gray-300 mb-4">
                   个人{selectedAdmins.length}
-                </div>
+                </div> */}
                 <div className="space-y-3">
                   {selectedAdmins.map((admin) => (
                     <div
@@ -1293,13 +1441,13 @@ const Component: React.FC = () => {
             )}
 
             {selectedAdmins.length === 0 && (
-              <div className="text-center py-12 text-gray-500 text-sm">
+              <div className="text-center py-12 text-gray-500 text-sm relative z-10">
                 暂无权限设置
               </div>
             )}
 
             {/* 操作按钮 */}
-            <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-700">
+            <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-700 relative z-10">
               <button
                 onClick={handleClosePermissionModal}
                 className="px-6 py-2.5 text-sm font-medium bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
