@@ -119,6 +119,16 @@ importers:
         specifier: ^5.6.0
         version: 5.7.2
 
+  packages/webpack-plugin-now:
+    dependencies:
+      webpack:
+        specifier: ^5.0.0
+        version: 5.102.1(webpack-cli@5.1.4)
+    devDependencies:
+      typescript:
+        specifier: ^5.6.0
+        version: 5.7.2
+
   rdcs/rdc_test_1:
     dependencies:
       '@ant-design/icons':
@@ -2635,7 +2645,7 @@ packages:
     engines: {node: '>= 0.6'}
 
   fsevents@2.3.3:
-    resolution: {integrity: sha1-ysZAd4XQNnWipeGlMFxpezR9kNY=, tarball: http://r.npm.sankuai.com/fsevents/download/fsevents-2.3.3.tgz}
+    resolution: {integrity: sha1-ysZAd4XQNnWipeGlMFxpezR9kNY=, tarball: https://r.npm.sankuai.com/fsevents/download/fsevents-2.3.3.tgz}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
