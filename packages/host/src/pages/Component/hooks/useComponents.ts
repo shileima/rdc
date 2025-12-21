@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { message } from 'antd'
 import { fetchComponents, saveComponentVersions, deleteComponent, addRdcInfo, updateRdcStatus } from '../api/componentApi'
 import type { ComponentData, ComponentVersions, Status } from '../types'
@@ -30,6 +30,7 @@ const cleanVersions = (versions: ComponentVersions): ComponentVersions => {
 export const useComponents = () => {
   const [components, setComponents] = useState<ComponentData[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const componentsFetchedRef = useRef<boolean>(false)
 
   // 加载组件列表
   const loadComponents = useCallback(async () => {
@@ -54,6 +55,11 @@ export const useComponents = () => {
 
   // 初始化加载
   useEffect(() => {
+    // 防止 React StrictMode 导致的重复请求
+    if (componentsFetchedRef.current) {
+      return
+    }
+    componentsFetchedRef.current = true
     loadComponents()
   }, [loadComponents])
 
