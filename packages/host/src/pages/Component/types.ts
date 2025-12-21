@@ -72,6 +72,9 @@ export interface UserInfo {
   passport: string
   type: number
   subjectType: string
+  roles?: {
+    isSuperAdmin?: boolean
+  }
 }
 
 export interface MiscUser {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { message, Modal } from 'antd'
@@ -16,6 +16,7 @@ import type { UserInfo, ComponentData, ComponentVersions, MiscUser } from './typ
 const Component: React.FC = () => {
   const navigate = useNavigate()
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
+  const userInfoFetchedRef = useRef<boolean>(false)
   const [addModalVisible, setAddModalVisible] = useState<boolean>(false)
   const [editModal, setEditModal] = useState<ComponentData | null>(null)
   const [permissionModalVisible, setPermissionModalVisible] = useState<boolean>(false)
@@ -60,6 +61,12 @@ const Component: React.FC = () => {
       duration: 3,
       maxCount: 3,
     })
+
+    // 防止 React StrictMode 导致的重复请求
+    if (userInfoFetchedRef.current) {
+      return
+    }
+    userInfoFetchedRef.current = true
 
     const loadUserInfo = async () => {
       const user = await fetchUserInfo()
@@ -148,7 +155,7 @@ const Component: React.FC = () => {
     return false
   }, [savePermissions, currentRdcName, selectedAdmins, handleClosePermissionModal])
 
-  const canManage = userInfo?.login === 'mashilei'
+  const canManage = userInfo?.roles?.isSuperAdmin === true
   const existingNames = components.map(c => c.componentName)
 
   return (
