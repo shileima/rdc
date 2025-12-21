@@ -27,8 +27,10 @@ const Component: React.FC = () => {
     components,
     loading,
     updateComponent,
+    updateComponentLocal,
     addComponent,
-    removeComponent
+    removeComponent,
+    updateComponentStatus
   } = useComponents()
 
   // 权限管理 Hook
@@ -205,6 +207,9 @@ const Component: React.FC = () => {
             onEdit={handleEdit}
             onDelete={handleDelete}
             onPermission={handleOpenPermissionModal}
+            onUpdateStatus={async (componentName, status) => {
+              await updateComponentStatus(componentName, status)
+            }}
             deleting={deleting}
             canManage={canManage}
           />
@@ -228,6 +233,11 @@ const Component: React.FC = () => {
         component={editModal}
         onClose={handleCloseEditModal}
         onSave={handleSaveEdit}
+        onUpdateComponent={(componentName, versions) => {
+          // 直接更新组件列表，不重新请求接口
+          // 因为数据已经通过 saveRdcInfo 保存了，只需要更新本地状态
+          updateComponentLocal(componentName, versions)
+        }}
       />
 
       {/* 权限管理弹框 */}

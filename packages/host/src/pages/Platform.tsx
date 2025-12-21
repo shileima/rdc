@@ -86,7 +86,7 @@ const Platform: React.FC = () => {
     // 获取 RDC 组件列表
     try {
       setLoadingRdcs(true)
-      const apiUrl = `${getApiBaseUrl()}/nodeapi/lionConfig?key=rdc_component_version`
+      const apiUrl = `${getApiBaseUrl()}/nodeapi/lionConfig?key=rdc_component_list`
       const response = await fetch(apiUrl)
       const data: RdcComponentResponse = await response.json()
       

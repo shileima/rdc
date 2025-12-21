@@ -1,5 +1,6 @@
-import React from 'react'
-import type { ComponentData } from '../types'
+import React, { useState, useRef, useEffect } from 'react'
+import type { ComponentData, Status } from '../types'
+import { STATUS } from '../types'
 import { getVersionDisplay } from '../utils/versionUtils'
 
 interface ComponentTableProps {
@@ -8,6 +9,7 @@ interface ComponentTableProps {
   onEdit: (component: ComponentData) => void
   onDelete: (componentName: string) => void
   onPermission: (componentName: string) => void
+  onUpdateStatus: (componentName: string, status: Status) => Promise<void>
   deleting: string | null
   canManage: boolean
 }
@@ -18,9 +20,40 @@ const ComponentTable: React.FC<ComponentTableProps> = ({
   onEdit,
   onDelete,
   onPermission,
+  onUpdateStatus,
   deleting,
   canManage
 }) => {
+  const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null)
+  const menuRefs = useRef<Record<number, HTMLDivElement | null>>({})
+
+  // 点击外部关闭菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openMenuIndex !== null) {
+        const menuRef = menuRefs.current[openMenuIndex]
+        if (menuRef && !menuRef.contains(event.target as Node)) {
+          setOpenMenuIndex(null)
+        }
+      }
+    }
+
+    if (openMenuIndex !== null) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }
+  }, [openMenuIndex])
+
+  const handleToggleMenu = (index: number) => {
+    setOpenMenuIndex(openMenuIndex === index ? null : index)
+  }
+
+  const handleStatusChange = async (componentName: string, status: Status) => {
+    await onUpdateStatus(componentName, status)
+    setOpenMenuIndex(null)
+  }
   if (loading) {
     return (
       <div className="px-8 py-16 text-center">
@@ -37,6 +70,9 @@ const ComponentTable: React.FC<ComponentTableProps> = ({
           <tr>
             <th className="px-8 py-5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
               组件名称
+            </th>
+            <th className="px-8 py-5 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              状态
             </th>
             <th className="px-8 py-5 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">
               版本
@@ -59,6 +95,15 @@ const ComponentTable: React.FC<ComponentTableProps> = ({
               <td className="px-8 py-6 whitespace-nowrap">
                 <span className="text-sm font-bold text-blue-200">
                   {component.componentName}
+                </span>
+              </td>
+              <td className="px-8 py-6 whitespace-nowrap text-center">
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                  component.status === STATUS.ACTIVE
+                    ? 'bg-green-500/20 text-green-300 border border-green-500/30'
+                    : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                }`}>
+                  {component.status === STATUS.ACTIVE ? '生效' : '失效'}
                 </span>
               </td>
               <td className="px-8 py-6 whitespace-nowrap">
@@ -120,6 +165,36 @@ const ComponentTable: React.FC<ComponentTableProps> = ({
                       >
                         {deleting === component.componentName ? '删除中...' : '删除'}
                       </button>
+                      <div className="relative" ref={(el) => { menuRefs.current[index] = el }}>
+                        <button
+                          onClick={() => handleToggleMenu(index)}
+                          className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 ${
+                            openMenuIndex === index
+                              ? 'bg-gray-700/60 text-gray-200'
+                              : 'text-gray-400 hover:text-gray-300 hover:bg-gray-700/30'
+                          }`}
+                          aria-label="更多操作"
+                          tabIndex={0}
+                        >
+                          更多
+                        </button>
+                        {openMenuIndex === index && (
+                          <div className="absolute right-0 mt-2 w-28 bg-gray-800/95 backdrop-blur-sm border border-gray-600/50 rounded-lg shadow-2xl z-50 overflow-hidden">
+                            <button
+                              onClick={() => handleStatusChange(component.componentName, component.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE)}
+                              className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-all duration-150 ${
+                                component.status === STATUS.ACTIVE
+                                  ? 'text-orange-300 hover:bg-orange-500/20 hover:text-orange-200'
+                                  : 'text-green-300 hover:bg-green-500/20 hover:text-green-200'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <span>{component.status === STATUS.ACTIVE ? '下线' : '上线'}</span>
+                              </div>
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </>
                   )}
                 </div>

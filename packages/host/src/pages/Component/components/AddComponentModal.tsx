@@ -22,14 +22,61 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
   const [versions, setVersions] = useState<ComponentVersions>(createEmptyVersions())
   const [autoFilledFields, setAutoFilledFields] = useState<Set<string>>(new Set())
   const [saving, setSaving] = useState<boolean>(false)
+  const [nameError, setNameError] = useState<string>('')
 
   useEscKey(visible, onClose)
+
+  // 验证组件名称格式
+  const validateComponentName = useCallback((name: string): string => {
+    if (!name.trim()) {
+      return '请输入组件名称'
+    }
+    
+    if (name.length > 50) {
+      return '组件名称不能超过50个字符'
+    }
+    
+    // 只允许小写字母开头，只允许字母+下划线+数字组合
+    const namePattern = /^[a-z][a-z0-9_]*$/
+    if (!namePattern.test(name)) {
+      return '组件名称必须以小写字母开头，只能包含小写字母、数字和下划线，不允许空格'
+    }
+    
+    return ''
+  }, [])
+
+  // 处理组件名称输入变化
+  const handleNameChange = useCallback((value: string) => {
+    // 移除空格
+    let filteredValue = value.replace(/\s/g, '')
+    
+    // 如果第一个字符不是小写字母，过滤掉
+    if (filteredValue.length > 0 && !/^[a-z]/.test(filteredValue)) {
+      // 如果第一个字符不是小写字母，只保留符合规则的字符
+      filteredValue = filteredValue.replace(/^[^a-z]*/, '')
+    }
+    
+    // 只允许小写字母、数字和下划线
+    filteredValue = filteredValue.replace(/[^a-z0-9_]/g, '')
+    
+    // 限制最大长度
+    if (filteredValue.length > 50) {
+      filteredValue = filteredValue.substring(0, 50)
+    }
+    
+    setComponentName(filteredValue)
+    
+    // 实时验证
+    const error = validateComponentName(filteredValue)
+    setNameError(error)
+  }, [validateComponentName])
 
   // 重置表单
   const resetForm = useCallback(() => {
     setComponentName('')
     setVersions(createEmptyVersions())
     setAutoFilledFields(new Set())
+    setNameError('')
   }, [])
 
   // 处理关闭
@@ -98,26 +145,32 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
 
   // 处理保存
   const handleSave = useCallback(async () => {
-    if (!componentName.trim()) {
-      message.error('请输入组件名称')
+    const trimmedName = componentName.trim()
+    
+    // 验证组件名称
+    const error = validateComponentName(trimmedName)
+    if (error) {
+      setNameError(error)
+      message.error(error)
       return
     }
 
-    if (existingNames.includes(componentName.trim())) {
+    if (existingNames.includes(trimmedName)) {
+      setNameError('组件名称已存在')
       message.error('组件名称已存在')
       return
     }
 
     try {
       setSaving(true)
-      const success = await onSave(componentName.trim(), versions)
+      const success = await onSave(trimmedName, versions)
       if (success) {
         handleClose()
       }
     } finally {
       setSaving(false)
     }
-  }, [componentName, versions, onSave, existingNames, handleClose])
+  }, [componentName, versions, onSave, existingNames, handleClose, validateComponentName])
 
   if (!visible) return null
 
@@ -151,11 +204,27 @@ const AddComponentModal: React.FC<AddComponentModalProps> = ({
               id="new-component-name"
               type="text"
               value={componentName}
-              onChange={(e) => setComponentName(e.target.value)}
-              className="w-full text-sm bg-gradient-to-br from-gray-700/80 to-gray-800/80 border-2 border-blue-500/30 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500/60 transition-all duration-200 placeholder-gray-400 shadow-inner"
-              placeholder="请输入组件名称"
+              onChange={(e) => handleNameChange(e.target.value)}
+              className={`w-full text-sm bg-gradient-to-br from-gray-700/80 to-gray-800/80 border-2 ${
+                nameError 
+                  ? 'border-red-500/50 focus:border-red-500/80 focus:ring-red-500/50' 
+                  : 'border-blue-500/30 focus:border-blue-500/60 focus:ring-blue-500'
+              } text-white rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 transition-all duration-200 placeholder-gray-400 shadow-inner`}
+              placeholder="请输入组件名称（小写字母开头，字母+数字+下划线）"
               aria-required="true"
+              maxLength={50}
             />
+            {nameError && (
+              <p className="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                <span>⚠</span>
+                <span>{nameError}</span>
+              </p>
+            )}
+            {!nameError && componentName && (
+              <p className="mt-1.5 text-xs text-gray-400">
+                已输入 {componentName.length}/50 个字符
+              </p>
+            )}
           </div>
           
           <VersionForm

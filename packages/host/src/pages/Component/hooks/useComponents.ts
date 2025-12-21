@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { message } from 'antd'
-import { fetchComponents, saveComponentVersions, deleteComponent } from '../api/componentApi'
-import type { ComponentData, ComponentVersions } from '../types'
+import { fetchComponents, saveComponentVersions, deleteComponent, addRdcInfo, updateRdcStatus } from '../api/componentApi'
+import type { ComponentData, ComponentVersions, Status } from '../types'
+import { STATUS } from '../types'
 
 /**
  * 清理版本数据，过滤掉空字符串
@@ -36,9 +37,10 @@ export const useComponents = () => {
       setLoading(true)
       const data = await fetchComponents()
       const componentList: ComponentData[] = Object.entries(data).map(
-        ([componentName, versions]) => ({
+        ([componentName, item]) => ({
           componentName,
-          versions
+          versions: item.versions,
+          status: item.status
         })
       )
       setComponents(componentList)
@@ -108,24 +110,17 @@ export const useComponents = () => {
 
     try {
       const cleanedVersions = cleanVersions(versions)
-      const allComponentsMap: Record<string, ComponentVersions> = {}
-      components.forEach(comp => {
-        allComponentsMap[comp.componentName] = comp.versions
-      })
-      allComponentsMap[componentName.trim()] = cleanedVersions
-
-      const result = await saveComponentVersions(
-        componentName.trim(),
-        allComponentsMap,
-        cleanedVersions
-      )
+      
+      // 使用新的 addRdcInfo 接口
+      const result = await addRdcInfo(componentName.trim(), cleanedVersions)
 
       if (result.success) {
         setComponents(prev => [
           ...prev,
           {
             componentName: componentName.trim(),
-            versions: cleanedVersions
+            versions: cleanedVersions,
+            status: STATUS.ACTIVE // 新增组件默认为生效状态
           }
         ])
         message.success('新增组件成功')
@@ -168,13 +163,60 @@ export const useComponents = () => {
     }
   }, [components])
 
+  // 直接更新组件版本（不调用 API，仅更新本地状态）
+  const updateComponentLocal = useCallback((
+    componentName: string,
+    versions: ComponentVersions
+  ): void => {
+    const cleanedVersions = cleanVersions(versions)
+    setComponents(prev => 
+      prev.map(comp => 
+        comp.componentName === componentName
+          ? { ...comp, versions: cleanedVersions }
+          : comp
+      )
+    )
+  }, [])
+
+  // 更新组件状态（上线/下线）
+  const updateComponentStatus = useCallback(async (
+    componentName: string,
+    status: Status
+  ): Promise<boolean> => {
+    try {
+      const result = await updateRdcStatus(componentName, status)
+      
+      if (result.success) {
+        setComponents(prev => 
+          prev.map(comp => 
+            comp.componentName === componentName
+              ? { ...comp, status }
+              : comp
+          )
+        )
+        message.success(status === STATUS.ACTIVE ? '上线成功' : '下线成功')
+        return true
+      } else {
+        const errorMessage = result.message || `更新状态失败 (code: ${result.code || 'unknown'})`
+        message.error(errorMessage)
+        return false
+      }
+    } catch (error) {
+      console.error('更新组件状态失败:', error)
+      message.error('更新组件状态失败，请重试')
+      return false
+    }
+  }, [])
+
   return {
     components,
     loading,
     loadComponents,
     updateComponent,
+    updateComponentLocal,
     addComponent,
-    removeComponent
+    removeComponent,
+    updateComponentStatus
   }
 }
 
