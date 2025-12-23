@@ -9,8 +9,7 @@ interface RdcSelectorProps {
 const RDC_OPTIONS: Array<{ id: RdcType; label: string }> = [
   { id: 'rdc1', label: 'Test' },
   { id: 'rdc2', label: 'Form' },
-  { id: 'rdc3', label: 'Table' },
-  { id: 'rdc4', label: 'Canvas' }
+  { id: 'rdc3', label: 'Table' }
 ]
 
 const RdcSelector: React.FC<RdcSelectorProps> = ({ currentRdc, onSelect }) => {

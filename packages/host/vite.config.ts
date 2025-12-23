@@ -17,6 +17,7 @@ export default defineConfig({
       remotes: nowPlugin({
         components: ['rdc_test_1', 'rdc_test_form', 'rdc_test_table', 'rdc_test_editor'],
         env: 'test',
+        rdcBaseUrl: 'https://aie.waimai.st.sankuai.com/rdc_host/rdc',
       }),
       shared: getSharedConfig(),
     })
